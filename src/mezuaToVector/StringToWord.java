@@ -1,5 +1,6 @@
 package mezuaToVector;
 
+import java.io.File;
 import java.io.FileWriter;
 
 import weka.core.Instances;
@@ -10,10 +11,10 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 public class StringToWord {
 	
 	public static void main(String[] args) throws Exception {
-		stringToWordVector(args[0]);
+		stringToWordVector(args[0], "/home/ekaitzhara/Documentos/UNI/EHES/Proiektua/Fitxategiak/dictionary.txt");
 	}
 
-	public static void stringToWordVector(String pathToArff) throws Exception {
+	public static void stringToWordVector(String pathToArff, String pathToDictionary) throws Exception {
 		DataSource source = new DataSource(pathToArff);
 		Instances train = source.getDataSet();
 		if (train.classIndex() == -1)
@@ -27,6 +28,11 @@ public class StringToWord {
 		stwv.setInputFormat(train);
 		stwv.setWordsToKeep(hiztegiZabalera);
 		stwv.setMinTermFreq(3);
+		
+		// Gorde dictionary
+		stwv.setDictionaryFileToSaveTo(new File(pathToDictionary));
+		stwv.setPeriodicPruning(100.0);
+		
 		train = Filter.useFilter(train, stwv);
 		train.setClassIndex(0);
 		

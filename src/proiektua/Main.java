@@ -10,6 +10,7 @@ import mezuaToVector.OptimizeTermFreq;
 import mezuaToVector.StringToWord;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 
 
@@ -29,18 +30,19 @@ public class Main {
 			i++;
 		}
 		i = 0;
-		while ((st = br.readLine()) != null) {
+		while ((st = br.readLine()) != null && !"-".equals(st)) {
 			arffGuztiak[i] = st;
 			i++;
 		}
+		String pathDictionaryFile = br.readLine();
 		
 		// ARFF -> 0: test  1: test_unk  2: train
 		
 		// CSV guztiak ARFF formatura pasa
-		AllCsvToArff.convertCsvToArff(csvGuztiak);
+//		AllCsvToArff.convertCsvToArff(csvGuztiak);
 		
 		// BOW sortu
-		StringToWord.stringToWordVector(arffGuztiak[2]);
+		StringToWord.stringToWordVector(arffGuztiak[2], pathDictionaryFile);
 		
 		// NonSparseToSparse
 		Instances train = NonSparsetikSparsera.nonSparseToSparse(arffGuztiak[2]);
@@ -50,9 +52,14 @@ public class Main {
 		if (test.classIndex() == -1)
 			test.setClassIndex(test.numAttributes() - 1);
 		
+		System.out.println("\n" + test.firstInstance());
+		
 		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
+		fixedDictionary.setDictionaryFile(new File(pathDictionaryFile));
 		fixedDictionary.setInputFormat(test);
-		fixedDictionary.setDictionaryFile(file);
+		test = Filter.useFilter(test, fixedDictionary);
+		
+		System.out.println(test.firstInstance());
 		
 	} 
 		

@@ -54,6 +54,7 @@ public class Main {
 		
 		System.out.println("\n" + test.firstInstance());
 		
+		// Fixed aplikatu test-ari train-aren berdina izateko
 		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
 		fixedDictionary.setDictionaryFile(new File(pathDictionaryFile));
 		fixedDictionary.setInputFormat(test);

@@ -3,6 +3,7 @@ package mezuaToVector;
 import java.io.File;
 import java.io.FileWriter;
 
+import weka.core.DictionaryBuilder;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -35,6 +36,7 @@ public class StringToWord {
 		
 		train = Filter.useFilter(train, stwv);
 		train.setClassIndex(0);
+		System.out.println(train.numAttributes());
 		
 		// Gorde trainBOW.arff
 		String pathToSaveSTWV = pathToArff.split("\\.")[0];

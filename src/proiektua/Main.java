@@ -8,6 +8,8 @@ import mezuaToVector.AllCsvToArff;
 import mezuaToVector.NonSparsetikSparsera;
 import mezuaToVector.OptimizeTermFreq;
 import mezuaToVector.StringToWord;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -60,7 +62,20 @@ public class Main {
 		fixedDictionary.setInputFormat(test);
 		test = Filter.useFilter(test, fixedDictionary);
 		
+		
+		
 		System.out.println(test.firstInstance());
+		
+		System.out.println("Train: " + train.numAttributes() + " eta test: " + test.numAttributes());
+		
+		NaiveBayes classifier = new NaiveBayes();
+		Evaluation evaluator = new Evaluation(train);
+		
+		classifier.buildClassifier(train);
+		evaluator.evaluateModel(classifier, test);
+		System.out.println(evaluator.toSummaryString("\nSUMMARY", false));
+		System.out.println(evaluator.toClassDetailsString());
+		System.out.println(evaluator.toMatrixString());
 		
 	} 
 		

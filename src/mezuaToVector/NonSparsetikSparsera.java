@@ -25,7 +25,7 @@ public class NonSparsetikSparsera {
 		stwv.setAttributeIndices("first-last");
 		stwv.setInputFormat(train);
 		stwv.setWordsToKeep(hiztegiZabalera);
-		stwv.setMinTermFreq(6);
+		stwv.setMinTermFreq(3);
 		
 		train = Filter.useFilter(train, stwv);
 		train.setClassIndex(0);
@@ -33,13 +33,13 @@ public class NonSparsetikSparsera {
 		
 		
 		System.out.println("NonSparse instantzia = > " + train.firstInstance());
-		System.out.println(train.instance(2));
+//		System.out.println(train.instance(2));
 		SparseToNonSparse nsts = new SparseToNonSparse();
 		nsts.setInputFormat(train);
 		train = Filter.useFilter(train, nsts);
 		
 		System.out.println("Sparse instantzia = > " + train.firstInstance());
-		System.out.println(train.instance(2));
+//		System.out.println(train.instance(2));
 		
 		return train;
 	}

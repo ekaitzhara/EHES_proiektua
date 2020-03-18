@@ -3,6 +3,7 @@ package proiektua;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 
 import mezuaToVector.AllCsvToArff;
 import mezuaToVector.NonSparsetikSparsera;
@@ -62,11 +63,18 @@ public class Main {
 		fixedDictionary.setDictionaryFile(new File(pathDictionaryFile));
 		fixedDictionary.setInputFormat(test);
 		test = Filter.useFilter(test, fixedDictionary);
-		
-		
-		
 		System.out.println(test.firstInstance());
 		
+		// TestBOW gorde
+		String pathTestBOW = arffGuztiak[0];
+		pathTestBOW = pathTestBOW.split("\\.")[0];
+		pathTestBOW = pathTestBOW + "BOW.arff";
+		
+		FileWriter f = new FileWriter(pathTestBOW);
+		f.write(test.toString());
+		f.close();
+		
+		// Begiratu atributu kopurua dutela
 		System.out.println("Train: " + train.numAttributes() + " eta test: " + test.numAttributes());
 		
 		NaiveBayes classifier = new NaiveBayes();

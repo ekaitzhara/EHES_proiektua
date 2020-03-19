@@ -75,7 +75,10 @@ public class Main {
 		f.close();
 		
 		// Begiratu atributu kopurua dutela
+		System.out.println("ATRIBUTUAK:");
 		System.out.println("Train: " + train.numAttributes() + " eta test: " + test.numAttributes());
+		System.out.println("INSTANTZIAK:");
+		System.out.println("Train: " + train.numInstances() + " eta test: " + test.numInstances());
 		
 		NaiveBayes classifier = new NaiveBayes();
 		Evaluation evaluator = new Evaluation(train);

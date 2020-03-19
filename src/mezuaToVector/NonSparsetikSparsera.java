@@ -1,5 +1,7 @@
 package mezuaToVector;
 
+import java.io.FileWriter;
+
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -40,6 +42,13 @@ public class NonSparsetikSparsera {
 		
 		System.out.println("Sparse instantzia = > " + train.firstInstance());
 //		System.out.println(train.instance(2));
+		
+		// Gorde trainBOWSparse.arff
+		String pathToSaveSTWV = pathArff.split("\\.")[0];
+		pathToSaveSTWV = pathToSaveSTWV + "BOWSparse.arff";
+		FileWriter f = new FileWriter(pathToSaveSTWV);
+		f.write(train.toString());
+		f.close();
 		
 		return train;
 	}

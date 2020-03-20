@@ -20,7 +20,7 @@ public class TransformRaw {
 	public static void transFormRawMetodoa(String pathArff, String errepresentazioa, String bektoreMota) throws Exception {
 		
 		String dataName = pathArff.split("\\.")[0];
-		String newArff = dataName + errepresentazioa + "_" + bektoreMota + ".arff";
+		String newArff = dataName + "_" + errepresentazioa + "_" + bektoreMota + ".arff";
 		
 		DataSource source = new DataSource(pathArff);
 		Instances train = source.getDataSet();
@@ -43,7 +43,7 @@ public class TransformRaw {
 		}
 		
 		// Gorde dictionary
-		stwv.setDictionaryFileToSaveTo(new File(dataName + "_dictionary.txt"));
+		stwv.setDictionaryFileToSaveTo(new File(dataName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));
 		stwv.setPeriodicPruning(100.0);
 		
 		train = Filter.useFilter(train, stwv);

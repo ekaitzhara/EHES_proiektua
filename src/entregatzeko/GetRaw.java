@@ -21,7 +21,7 @@ public class GetRaw {
 	
 	public static void datuGordinetikArff(String pathToData, String pathArff) throws Exception {
 		
-		// Arff-ren izena lortzeko
+		
 		String dataName = pathToData.split("\\.")[0];
 		String fileType = pathToData.split("\\.")[1];
 		String pathFileAux = dataName + "2." + fileType;

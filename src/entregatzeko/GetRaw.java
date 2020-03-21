@@ -16,6 +16,25 @@ import weka.filters.unsupervised.attribute.Remove;
 public class GetRaw {
 
 	public static void main(String[] args) throws Exception {
+		
+		if (args.length == 0) {
+			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
+			System.out.println("Aurrebaldintza:");
+			System.out.println("	Fitxategi batean (csv, txt...) datu zuzenak eduki");
+			System.out.println("	Datu zuzenak -(hiru zutabe lerroko)-> id, mezua, klasea || Dokumentu bakoitza instantzi bat izango da\n");
+			System.out.println("Ondorengo balditza:");
+			System.out.println("	Adierazi duzun direktorioan gordeko da .arff fitxategia, Wekak irakurri dezakeen formatu zuzena");
+			System.out.println("	mezua String motako atributu bakar batekin karakterizatuko da, eta klasea, atributu nominal bat bezala\n");
+			System.out.println("Argumentuen zerrenda eta deskribapena:");
+			System.out.println("	1 -> Datuak dauzkan fitxategiaren kokalekua (txt, csv...)");
+			System.out.println("	2 -> Arff fitxategia non eta zein izenarekin gorde nahi duzun kokalekua\n");
+			System.out.println("Adibide hau jarraitu:\n");
+			System.out.println("		java -jar getRaw.jar /home/erabiltzaileIzena/nonDagoCSV/adibidea.csv /home/erabiltzaileIzena/nonGordeNahi/adibidea.arff\n");
+			
+			
+			System.exit(0);
+		}
+		
 		datuGordinetikArff(args[0], args[1]);
 	}
 	

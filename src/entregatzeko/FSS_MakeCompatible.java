@@ -67,12 +67,15 @@ public class FSS_MakeCompatible {
 		
 		
 		String[] aux = toChangeArff.split("/");
-		changed.setRelationName(aux[aux.length-1].split("\\.")[0]);
-		FileWriter f = new FileWriter(toChangeArff.split("\\.")[0] + "_FSS.arff");
+		String fileName = aux[aux.length-1];
+		changed.setRelationName(fileName.split("\\.")[0]);
+		
+		
+		FileWriter f = new FileWriter(toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
 		f.write(changed.toString());
 		f.close();
 		
-		System.out.println("\nAtributuak konpatible kenduta ondo gorde da hemen: " + toChangeArff);
+		System.out.println("\nAtributuak konpatible kenduta ondo gorde da hemen: " + toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
 	}
 
 }

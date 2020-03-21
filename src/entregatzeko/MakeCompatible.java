@@ -29,9 +29,14 @@ public class MakeCompatible {
 	
 	public static void makeCompatibleArffFile(String goodArff, String arffToChange) throws Exception {
 		
+		String[] aux1 = goodArff.split("/");
+		String directory = goodArff.replace(aux1[aux1.length-1], "");
 		
 		String goodName = goodArff.split("_")[0];
-		String newArff = arffToChange.split("\\.")[0] + goodArff.replace(goodName, "");
+		aux1 = arffToChange.split("/");
+		String changeName = aux1[aux1.length-1].split("\\.")[0];
+		
+		String newArff = directory + changeName + goodArff.replace(goodName, "");
 		System.out.println(newArff);
 		
 		String dictionaryPath = goodArff.split("\\.")[0] + "_dictionary.txt";
@@ -46,7 +51,7 @@ public class MakeCompatible {
 		fixedDictionary.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, fixedDictionary);
 		
-		
+		toChange.setRelationName(changeName + goodArff.replace(goodName, "").split("\\.")[0]);
 		FileWriter f = new FileWriter(newArff);
 		f.write(toChange.toString());
 		f.close();

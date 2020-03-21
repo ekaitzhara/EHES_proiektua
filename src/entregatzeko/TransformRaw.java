@@ -18,15 +18,22 @@ public class TransformRaw {
 			
 			System.exit(0);
 		}
-		transFormRawMetodoa(args[0], args[1], args[2]);
+		transFormRawMetodoa(args[0], args[1], args[2], args[3]);
 	}
 
 	// Errepresentazioa --> BOW ala TFIDF
 	// String bektoreMota --> NonSparse ala Sparse
-	public static void transFormRawMetodoa(String pathArff, String errepresentazioa, String bektoreMota) throws Exception {
+	public static void transFormRawMetodoa(String pathArff, String direktorioa ,String errepresentazioa, String bektoreMota) throws Exception {
+		
+		// Direktorioa karpeta ez badago sortuta
+        File modelDirectory = new File(direktorioa);
+        if (!modelDirectory.exists())
+        	modelDirectory.mkdir();
 		
 		String dataName = pathArff.split("\\.")[0];
-		String newArff = dataName + "_" + errepresentazioa + "_" + bektoreMota + ".arff";
+		String[] aux = dataName.split("/");
+		String fileName = aux[aux.length-1];
+		String newArff = direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + ".arff";
 		
 		DataSource source = new DataSource(pathArff);
 		Instances train = source.getDataSet();
@@ -49,7 +56,7 @@ public class TransformRaw {
 		}
 		
 		// Gorde dictionary
-		stwv.setDictionaryFileToSaveTo(new File(dataName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));
+		stwv.setDictionaryFileToSaveTo(new File(direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));
 		stwv.setPeriodicPruning(100.0);
 		
 		train = Filter.useFilter(train, stwv);
@@ -64,6 +71,7 @@ public class TransformRaw {
 			train = Filter.useFilter(train, nsts);
 		}
 		
+        train.setRelationName(fileName + "_" + errepresentazioa + "_" + bektoreMota);
 		FileWriter f = new FileWriter(newArff);
 		f.write(train.toString());
 		f.close();

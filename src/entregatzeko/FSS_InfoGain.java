@@ -1,5 +1,6 @@
 package entregatzeko;
 
+import java.io.File;
 import java.io.FileWriter;
 
 import weka.attributeSelection.AttributeSelection;
@@ -48,6 +49,13 @@ public class FSS_InfoGain {
 		
 		String[] aux = arffToSave.split("/");
 		newTrain.setRelationName(aux[aux.length-1].split("\\.")[0]);
+		
+		// FSS karpeta ez badago sortuta
+        File modelDirectory = new File(arffToSave.replace("/" + aux[aux.length-1], ""));
+        if (!modelDirectory.exists())
+        	modelDirectory.mkdir();
+		
+		
 		FileWriter f = new FileWriter(arffToSave);
 		f.write(newTrain.toString());
 		f.close();

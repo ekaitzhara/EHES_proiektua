@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class GetBaselineModel {
@@ -46,7 +47,9 @@ public class GetBaselineModel {
         if (!modelDirectory.exists())
         	modelDirectory.mkdir();
 		
-		
+		SerializationHelper.write(modelPath, classifier);
+		System.out.println(modelPath + " modeloa gordeta");
+        
 		FileWriter f = new FileWriter(modelPath.split("\\.")[0] + "_estimatutakoKalitatea.txt");
 		f.write(evaluator.toSummaryString("=== SUMMARY ===", false));
 		f.write("\n" + evaluator.toClassDetailsString());

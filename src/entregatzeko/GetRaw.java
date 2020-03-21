@@ -64,22 +64,32 @@ public class GetRaw {
 		    CSVLoader loader = new CSVLoader();
 		    loader.setSource(new File(pathFileAux));
 		    data = loader.getDataSet();
-		    
-		    Remove r = new Remove();
-		    int[] indice = {0};
-		    r.setAttributeIndicesArray(indice);
-		    r.setInvertSelection(false);
-		    r.setInputFormat(data);
-		    data = Filter.useFilter(data, r);
-		    
-		    NominalToString filterString = new NominalToString();
-			filterString.setAttributeIndexes("first");
-			filterString.setInputFormat(data);
-			data = Filter.useFilter(data, filterString);
-			System.out.println("Arff-ko instantzia => " + data.instance(2));
         }
         
+        String relationName = data.relationName().substring(0, data.relationName().length()-1);
+        
+        Remove r = new Remove();
+	    int[] indice = {0};
+	    r.setAttributeIndicesArray(indice);
+	    r.setInvertSelection(false);
+	    r.setInputFormat(data);
+	    data = Filter.useFilter(data, r);
+	    
+	    NominalToString filterString = new NominalToString();
+		filterString.setAttributeIndexes("first");
+		filterString.setInputFormat(data);
+		data = Filter.useFilter(data, filterString);
+		System.out.println("Arff-ko instantzia => " + data.instance(2));
+        
+		// Arff karpeta ez badago sortuta
+		String[] aux = pathArff.split("/");
+		String modelName = aux[aux.length-1];
+        File modelDirectory = new File(pathArff.replace(modelName, ""));
+        if (!modelDirectory.exists())
+        	modelDirectory.mkdir();
+		
         // save ARFF
+        data.setRelationName(relationName);
         ArffSaver saver = new ArffSaver();
         saver.setInstances(data);
         saver.setFile(new File(pathArff));

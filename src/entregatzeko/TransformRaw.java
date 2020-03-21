@@ -14,7 +14,22 @@ public class TransformRaw {
 	public static void main(String[] args) throws Exception {
 		
 		if(args.length == 0) {
-			System.out.println("LAGUNTZA");
+			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
+			System.out.println("Aurrebaldintza:");
+			System.out.println("	Lehenik GetRaw aplikatu izana, horrela arff zuzena sortuta edukiko duelako");
+			System.out.println("	Hemendik aurrera sortuko diren fitxategi aldatuak gordeko diren direktorioa erabaki (bakarrik erabaki, programak sortuko du)");
+			System.out.println("	Errepresentazioa erabaki. Bi aukera daude: BOW edo TFIDF");
+			System.out.println("	Bektore mota erabaki. Bi aukera daude: NonSparse edo Sparse\n");
+			System.out.println("Ondorengo balditza:");
+			System.out.println("	Zehaztu dugun direktorioan, aukeratutako erreprensentazio eta bektore motako arff-a sortuko da");
+			System.out.println("	Adibidez, BOW eta Spase aukeratu baduzu, filtro horiek dituen datuz osatutako arff-a sortuko da\n");
+			System.out.println("Argumentuen zerrenda eta deskribapena:");
+			System.out.println("	1 -> getRaw-en sortutako arff-aren path-a");
+			System.out.println("	2 -> Gordeko den direktorioa (ARFF karpetaren leku berdinean sortu)");
+			System.out.println("	3 -> Errepresentazio mota: BOW ala TFIDF");
+			System.out.println("	4 -> Bektore mota: NonSparse ala Sparse");
+			System.out.println("Adibide hau jarraitu:\n");
+			System.out.println("		java -jar transformRaw.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/workdir/Direktorioa BOW NonSparse\n");
 			
 			System.exit(0);
 		}

@@ -1,5 +1,8 @@
 package entregatzeko;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
@@ -32,6 +35,27 @@ public class GetBaselineModel {
 		
 		NaiveBayes classifier = new NaiveBayes();
 		Evaluation evaluator = new Evaluation(train);
+		
+		classifier.buildClassifier(train);
+		evaluator.evaluateModel(classifier, test);
+		
+		// Model karpeta ez badago sortuta
+		String[] aux = modelPath.split("/");
+		String modelName = aux[aux.length-1];
+        File modelDirectory = new File(modelPath.replace(modelName, ""));
+        if (!modelDirectory.exists())
+        	modelDirectory.mkdir();
+		
+		
+		FileWriter f = new FileWriter(modelPath.split("\\.")[0] + "_estimatutakoKalitatea.txt");
+		f.write(evaluator.toSummaryString("=== SUMMARY ===", false));
+		f.write("\n" + evaluator.toClassDetailsString());
+		f.write("\n" + evaluator.toMatrixString());
+		f.close();
+		
+		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
+		System.out.println(evaluator.toClassDetailsString());
+		System.out.println(evaluator.toMatrixString());
 	}
 	
 }

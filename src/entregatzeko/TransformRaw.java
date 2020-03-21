@@ -12,6 +12,12 @@ import weka.filters.unsupervised.instance.SparseToNonSparse;
 public class TransformRaw {
 	
 	public static void main(String[] args) throws Exception {
+		
+		if(args.length == 0) {
+			System.out.println("LAGUNTZA");
+			
+			System.exit(0);
+		}
 		transFormRawMetodoa(args[0], args[1], args[2]);
 	}
 

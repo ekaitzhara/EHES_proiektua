@@ -12,6 +12,13 @@ import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 public class MakeCompatible {
 	
 	public static void main(String[] args) throws Exception {
+		
+		if(args.length == 0) {
+			System.out.println("LAGUNTZA");
+			
+			System.exit(0);
+		}
+		
 		try {
 			makeCompatibleArffFile(args[0], args[1]);
 		}catch (IOException e) {

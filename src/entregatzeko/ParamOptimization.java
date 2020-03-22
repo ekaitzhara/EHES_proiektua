@@ -1,5 +1,7 @@
 package entregatzeko;
 
+import optimizing.BayesNetObject;
+import optimizing.BayesNetParamOpt;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
@@ -19,14 +21,11 @@ public class ParamOptimization {
 		parametroakOptimizatu(args[0]);
 	}
 
-	public static void parametroakOptimizatu(String trainPath) throws Exception {
+	public static void parametroakOptimizatu(String arffPath) throws Exception {
 		
-		DataSource source = new DataSource(trainPath);
-		Instances train = source.getDataSet();
-		if (train.classIndex() == -1)
-			train.setClassIndex(0);
+		BayesNetObject paramsOpt = BayesNetParamOpt.optimizatuParametroak(arffPath);
 		
-		
+		System.out.println(paramsOpt.toString());
 	}
 	
 }

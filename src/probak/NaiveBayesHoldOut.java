@@ -33,20 +33,7 @@ public class NaiveBayesHoldOut {
 		if (dataSet.classIndex() == -1)
 			dataSet.setClassIndex(0);
 		
-		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
-		if (klaseMinoritarioa == 0) {
-			int[] classCounts = dataSet.attributeStats(dataSet.classIndex()).nominalCounts;
-			int min = Integer.MAX_VALUE;
-			int min_pos = -1;
-			for (int i = 0; i < classCounts.length; i++) {
-				if ((classCounts[i] < min) && (classCounts[i] != 0)) {
-					min = classCounts[i];
-					min_pos = i;
-				}
-			}
-			klaseMinoritarioa = min_pos;
-		}
-		System.out.println("Klase minoritarioa => " + klaseMinoritarioa);
+		int klaseMinoritarioa = klaseMInoritarioaLortu(dataSet);
 		
 		String summary = null;
 		String classDetails = null;
@@ -90,7 +77,26 @@ public class NaiveBayesHoldOut {
 		System.out.println(classDetails);
 		System.out.println(matrix);
 	
-		
 	}
+
+	public static int klaseMInoritarioaLortu(Instances dataSet) {
+		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
+		if (klaseMinoritarioa == 0) {
+			int[] classCounts = dataSet.attributeStats(dataSet.classIndex()).nominalCounts;
+			int min = Integer.MAX_VALUE;
+			int min_pos = -1;
+			for (int i = 0; i < classCounts.length; i++) {
+				if ((classCounts[i] < min) && (classCounts[i] != 0)) {
+					min = classCounts[i];
+					min_pos = i;
+				}
+			}
+			klaseMinoritarioa = min_pos;
+		}
+		System.out.println("Klase minoritarioa => " + klaseMinoritarioa);
+		return klaseMinoritarioa;
+	}
+	
+	
 
 }

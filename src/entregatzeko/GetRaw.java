@@ -88,6 +88,10 @@ public class GetRaw {
         if (!modelDirectory.exists())
         	modelDirectory.mkdir();
 		
+        if(data.classIndex() == -1)
+        	data.setClassIndex(data.numAttributes() - 1);
+        System.out.println(data.numClasses());
+        
         // save ARFF
         data.setRelationName(relationName);
         ArffSaver saver = new ArffSaver();

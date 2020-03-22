@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -50,6 +51,7 @@ public class MakeCompatible {
 		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
 		fixedDictionary.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, fixedDictionary);
+		
 		
 		toChange.setRelationName(changeName + goodArff.replace(goodName, "").split("\\.")[0]);
 		FileWriter f = new FileWriter(newArff);

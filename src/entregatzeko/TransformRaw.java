@@ -61,14 +61,17 @@ public class TransformRaw {
 		System.out.println(hiztegiZabalera);
 		
 		StringToWordVector stwv = new StringToWordVector();
-		stwv.setAttributeIndices("first-last");
-		stwv.setInputFormat(train);
 		stwv.setWordsToKeep(hiztegiZabalera);
 		stwv.setMinTermFreq(3);
+		stwv.setAttributeIndices("first-last");
 		if ("TFIDF".equals(errepresentazioa)) {
 			stwv.setTFTransform(true);
 			stwv.setIDFTransform(true);
+		}else {
+			stwv.setIDFTransform(false);
+			stwv.setTFTransform(false);
 		}
+		stwv.setInputFormat(train);
 		
 		// Gorde dictionary
 		stwv.setDictionaryFileToSaveTo(new File(direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));

@@ -10,8 +10,11 @@ import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Add;
 import weka.filters.unsupervised.attribute.NominalToString;
+import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.RenameNominalValues;
 
 public class GetRaw {
 
@@ -90,7 +93,26 @@ public class GetRaw {
 		
         if(data.classIndex() == -1)
         	data.setClassIndex(data.numAttributes() - 1);
+        
         System.out.println(data.numClasses());
+        if (data.numClasses() == 1) {
+        	NumericToNominal numToNom = new NumericToNominal();
+        	numToNom.setAttributeIndices("last");
+        	numToNom.setInputFormat(data);
+        	data = Filter.useFilter(data, numToNom);
+        	
+        	Remove remove = new Remove();
+        	remove.setAttributeIndices("last");
+        	remove.setInputFormat(data);
+        	data = Filter.useFilter(data, remove);
+        	
+        	Add addNominal = new Add();
+        	addNominal.setAttributeIndex("last");
+        	addNominal.setAttributeName("label");
+        	addNominal.setNominalLabels("DESC,ENTY,ABBR,HUM,NUM,LOC");
+        	addNominal.setInputFormat(data);
+        	data = Filter.useFilter(data, addNominal);
+        }
         
         // save ARFF
         data.setRelationName(relationName);

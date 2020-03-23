@@ -4,6 +4,8 @@ import java.io.FileWriter;
 
 import optimizing.BayesNetObject;
 import optimizing.BayesNetParamOpt;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.BayesNet;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
@@ -20,10 +22,10 @@ public class ParamOptimization {
 			System.exit(0);
 		}
 		
-		parametroakOptimizatu(args[0]);
+		parametroakOptimizatu(args[0], args[1]);
 	}
 
-	public static void parametroakOptimizatu(String arffPath) throws Exception {
+	public static void parametroakOptimizatu(String arffPath, String modelPath) throws Exception {
 		
 		BayesNetObject paramsOpt = BayesNetParamOpt.optimizatuParametroak(arffPath);
 		
@@ -34,6 +36,8 @@ public class ParamOptimization {
 		f.close();
 		
 		System.out.println(paramsOpt.toString());
+		
+		BayesNetParamOpt.modeloaGorde(arffPath, paramsOpt, modelPath);
 	}
 	
 }

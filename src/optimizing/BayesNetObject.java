@@ -12,9 +12,6 @@ public class BayesNetObject {
 	private int numDecimalPlaces;
 	
 	private double fMeasure;
-	private String summary;
-	private String classDetails;
-	private String matrix;
 	
 	public BayesNetObject(BayesNetEstimator pEst, SearchAlgorithm searchAlg) {
 		
@@ -23,23 +20,42 @@ public class BayesNetObject {
 	}
 
 	public BayesNetObject(BayesNetEstimator estimator, SearchAlgorithm searchAlgorithm, String batchSize,
-			int numDecimalPlaces, double fMeasure, String summary, String classDetails, String matrix) {
+			int numDecimalPlaces, double fMeasure) {
 		
 		this.estimator = estimator;
 		this.searchAlgorithm = searchAlgorithm;
 		this.batchSize = batchSize;
 		this.numDecimalPlaces = numDecimalPlaces;
 		this.fMeasure = fMeasure;
-		this.summary = summary;
-		this.classDetails = classDetails;
-		this.matrix = matrix;
 	}
+
+	
+	
+	public BayesNetEstimator getEstimator() {
+		return estimator;
+	}
+
+	public SearchAlgorithm getSearchAlgorithm() {
+		return searchAlgorithm;
+	}
+
+	public String getBatchSize() {
+		return batchSize;
+	}
+
+	public int getNumDecimalPlaces() {
+		return numDecimalPlaces;
+	}
+
+	public double getfMeasure() {
+		return fMeasure;
+	}
+
 
 	@Override
 	public String toString() {
 		return "BayesNetObject [estimator=" + estimator.getClass().getSimpleName() + ", searchAlgorithm=" + searchAlgorithm.getClass().getSimpleName() + ", batchSize="
-				+ batchSize + ", numDecimalPlaces=" + numDecimalPlaces + ", fMeasure=" + fMeasure + ", \nsummary="
-				+ summary + ", \nclassDetails=" + classDetails + ", \nmatrix=" + matrix + "]";
+				+ batchSize + ", numDecimalPlaces=" + numDecimalPlaces + ", fMeasure=" + fMeasure + "]";
 	}
 
 	

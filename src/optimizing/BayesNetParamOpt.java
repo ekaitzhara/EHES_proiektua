@@ -1,5 +1,6 @@
 package optimizing;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,6 +23,7 @@ import weka.classifiers.bayes.net.search.local.SimulatedAnnealing;
 import weka.classifiers.bayes.net.search.local.TAN;
 import weka.classifiers.bayes.net.search.local.TabuSearch;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -138,7 +140,7 @@ public class BayesNetParamOpt {
 		System.out.println(classDetails);
 		System.out.println(matrix);
 		
-		paramsOpt = new BayesNetObject(estimatorOpt, searchAlgOpt, null, -1000, fMeasureOpt, summary, classDetails, matrix);
+		paramsOpt = new BayesNetObject(estimatorOpt, searchAlgOpt, null, -1000, fMeasureOpt);
 		
 		return paramsOpt;
 	}
@@ -160,5 +162,36 @@ public class BayesNetParamOpt {
 		}
 		System.out.println("Klase minoritarioa => " + klaseMinoritarioa);
 		return klaseMinoritarioa;
+	}
+
+
+	public static void modeloaGorde(String arffPath, BayesNetObject paramsOpt, String modelPath) throws Exception {
+		
+		DataSource source = new DataSource(arffPath);
+		Instances dataSet = source.getDataSet();
+		if (dataSet.classIndex() == -1)
+			dataSet.setClassIndex(dataSet.numAttributes() - 1);
+		
+		BayesNet classifier = new BayesNet();
+		Evaluation evaluator = new Evaluation(dataSet);
+		
+		classifier.setEstimator(paramsOpt.getEstimator());
+		classifier.setSearchAlgorithm(paramsOpt.getSearchAlgorithm());
+		
+		classifier.buildClassifier(dataSet);
+		evaluator.evaluateModel(classifier, dataSet);
+		
+		SerializationHelper.write(modelPath, classifier);
+		
+		FileWriter f = new FileWriter(modelPath.split("\\.")[0] + "Opt_estimatutakoKalitatea.txt");
+		f.write(evaluator.toSummaryString("=== SUMMARY ===", false));
+		f.write("\n" + evaluator.toClassDetailsString());
+		f.write("\n" + evaluator.toMatrixString());
+		f.close();
+		
+		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
+		System.out.println(evaluator.toClassDetailsString());
+		System.out.println(evaluator.toMatrixString());
+		
 	}
 }

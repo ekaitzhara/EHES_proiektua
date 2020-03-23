@@ -1,5 +1,7 @@
 package entregatzeko;
 
+import java.io.FileWriter;
+
 import optimizing.BayesNetObject;
 import optimizing.BayesNetParamOpt;
 import weka.core.Instances;
@@ -24,6 +26,12 @@ public class ParamOptimization {
 	public static void parametroakOptimizatu(String arffPath) throws Exception {
 		
 		BayesNetObject paramsOpt = BayesNetParamOpt.optimizatuParametroak(arffPath);
+		
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		FileWriter f = new FileWriter(direktorioa + "BayesNetParamsOpt.txt");
+		f.write(paramsOpt.toString());
+		f.close();
 		
 		System.out.println(paramsOpt.toString());
 	}

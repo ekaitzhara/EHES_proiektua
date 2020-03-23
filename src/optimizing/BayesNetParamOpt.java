@@ -3,6 +3,10 @@ package optimizing;
 import java.util.ArrayList;
 import java.util.Random;
 
+import entregatzeko.FSS_InfoGain;
+import entregatzeko.FSS_MakeCompatible;
+import entregatzeko.MakeCompatible;
+import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.net.estimate.BMAEstimator;
@@ -20,6 +24,8 @@ import weka.classifiers.bayes.net.search.local.TabuSearch;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
+import weka.filters.unsupervised.instance.RemovePercentage;
 
 public class BayesNetParamOpt {
 	
@@ -27,11 +33,9 @@ public class BayesNetParamOpt {
 		BayesNetObject paramsOpt = null;
 		
 		DataSource source = new DataSource(arffPath);
-		Instances train = source.getDataSet();
-		if (train.classIndex() == -1)
-			train.setClassIndex(0);
-		
-		int klaseMinoritarioa = klaseMinoritarioaLortu(train);
+		Instances dataSet = source.getDataSet();
+		if (dataSet.classIndex() == -1)
+			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
 		ArrayList<BayesNetEstimator> allEstimators = new ArrayList<BayesNetEstimator>();
 		allEstimators.add(new SimpleEstimator());
@@ -43,8 +47,8 @@ public class BayesNetParamOpt {
 		allSearchAlgorithms.add(new K2());
 //		allSearchAlgorithms.add(new GeneticSearch());		// Tarda mucho
 		allSearchAlgorithms.add(new HillClimber());
-		allSearchAlgorithms.add(new LAGDHillClimber());
-		allSearchAlgorithms.add(new RepeatedHillClimber());
+//		allSearchAlgorithms.add(new LAGDHillClimber());
+//		allSearchAlgorithms.add(new RepeatedHillClimber());
 		allSearchAlgorithms.add(new SimulatedAnnealing());
 		allSearchAlgorithms.add(new TabuSearch());
 		allSearchAlgorithms.add(new TAN());
@@ -68,15 +72,53 @@ public class BayesNetParamOpt {
 				try {
 					classifier.setEstimator(estimator);
 					classifier.setSearchAlgorithm(searchAlgorithm);
+
+					// HOLD-OUT
+					// Aukerak
+					String errepresentazioa = "BOW";
+					String bektoreMota = "NonSparse";
 					
-					classifier.buildClassifier(train);
-					evaluator = new Evaluation(train);
+					int seed = 1;
+					dataSet.randomize(new Random(seed));
+					RemovePercentage removePercentage = new RemovePercentage();
 					
-					evaluator.crossValidateModel(classifier, train, 2, new Random(1));
-					System.out.println("fMeasure: " + evaluator.fMeasure(klaseMinoritarioa));
+					// Train zatia lortzeko
+					removePercentage.setInputFormat(dataSet);
+					removePercentage.setPercentage(70);
+					removePercentage.setInvertSelection(true);	// %70-a lortzeko
+					Instances train = Filter.useFilter(dataSet, removePercentage);
 					
-					if (evaluator.fMeasure(klaseMinoritarioa) > fMeasureOpt) {
-						fMeasureOpt = evaluator.fMeasure(klaseMinoritarioa);
+					// Dev zatia lortzeko
+					removePercentage.setInputFormat(dataSet);
+					removePercentage.setInvertSelection(false);
+					Instances dev = Filter.useFilter(dataSet, removePercentage);
+					
+					String[] aux = arffPath.split("/");
+					String direktorioa = arffPath.replace(aux[aux.length-1],"");
+					String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+					
+					Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
+					
+					Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
+					
+					Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+					
+					Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+					
+//					int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
+					int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
+					
+					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName());
+					
+					evaluator = new Evaluation(train_BOW_FSS);
+					classifier.buildClassifier(train_BOW_FSS);
+					evaluator.evaluateModel(classifier, dev_BOW_FSS);
+					
+					System.out.println("fMeasure: " + evaluator.fMeasure(klaseMax));
+					
+					
+					if (evaluator.fMeasure(klaseMax) > fMeasureOpt) {	// Klase minimoarekin -> Nan edo 0.0
+						fMeasureOpt = evaluator.fMeasure(klaseMax);
 						estimatorOpt = estimator;
 						searchAlgOpt = searchAlgorithm;
 						

@@ -77,5 +77,38 @@ public class FSS_MakeCompatible {
 		
 		System.out.println("\nAtributuak konpatible kenduta ondo gorde da hemen: " + toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
 	}
+	
+	public static Instances make2InstancesCompatibles(Instances good, Instances toChange) throws Exception {
+		if (good.classIndex() == -1)
+			good.setClassIndex(good.numAttributes() - 1);
+		
+		if (toChange.classIndex() == -1)
+			toChange.setClassIndex(0);
+		String relationName = toChange.relationName();
+		
+		int index = 0;
+		int[] indexToDelete = new int[toChange.numAttributes()-good.numAttributes()];
+		
+		for (int i = 0; i < toChange.numAttributes(); i++) {
+			boolean badago = false;
+			for (int j = 0; j < good.numAttributes(); j++) {
+				if (good.attribute(j).name().equals(toChange.attribute(i).name()))
+					badago = true;
+			}
+			if (badago == false) {
+				indexToDelete[index] = i;
+				index++;
+			}
+		}
+		
+		Remove remove = new Remove();
+		remove.setAttributeIndicesArray(indexToDelete);
+		remove.setInvertSelection(false);
+		remove.setInputFormat(toChange);
+		Instances changed = Filter.useFilter(toChange, remove);
+		changed.setRelationName(relationName + "_makeCompatibleFSS");
+		
+		return changed;
+	}
 
 }

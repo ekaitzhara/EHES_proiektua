@@ -31,7 +31,7 @@ public class BayesNetParamOpt {
 		if (train.classIndex() == -1)
 			train.setClassIndex(0);
 		
-		int klaseMinoritarioa = klaseMInoritarioaLortu(train);
+		int klaseMinoritarioa = klaseMinoritarioaLortu(train);
 		
 		ArrayList<BayesNetEstimator> allEstimators = new ArrayList<BayesNetEstimator>();
 		allEstimators.add(new SimpleEstimator());
@@ -102,7 +102,7 @@ public class BayesNetParamOpt {
 	}
 
 	
-	public static int klaseMInoritarioaLortu(Instances dataSet) {
+	public static int klaseMinoritarioaLortu(Instances dataSet) {
 		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
 		if (klaseMinoritarioa == 0) {
 			int[] classCounts = dataSet.attributeStats(dataSet.classIndex()).nominalCounts;

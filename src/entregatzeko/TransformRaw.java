@@ -67,7 +67,9 @@ public class TransformRaw {
 		if ("TFIDF".equals(errepresentazioa)) {
 			stwv.setTFTransform(true);
 			stwv.setIDFTransform(true);
-		}else {
+		} else if("TF".equals(errepresentazioa)) {
+			stwv.setTFTransform(true);
+		} else {
 			stwv.setIDFTransform(false);
 			stwv.setTFTransform(false);
 		}
@@ -96,5 +98,42 @@ public class TransformRaw {
 		
 		System.out.println("Train " + errepresentazioa + " eta " + bektoreMota + " gordeta hemen: " + newArff);
 		
+	}
+	
+	public static Instances transformRawInstances(Instances dataSet, String errepresentazioa, String bektoreMota, String dictionaryPath) throws Exception {
+		Integer hiztegiZabalera = Integer.MAX_VALUE;
+		
+		StringToWordVector stwv = new StringToWordVector();
+		stwv.setWordsToKeep(hiztegiZabalera);
+		stwv.setMinTermFreq(3);
+		stwv.setAttributeIndices("first-last");
+		if ("TFIDF".equals(errepresentazioa)) {
+			stwv.setTFTransform(true);
+			stwv.setIDFTransform(true);
+		} else if("TF".equals(errepresentazioa)) {
+			stwv.setTFTransform(true);
+		} else {
+			stwv.setIDFTransform(false);
+			stwv.setTFTransform(false);
+		}
+		stwv.setInputFormat(dataSet);
+		
+		// Gorde dictionary
+		stwv.setDictionaryFileToSaveTo(new File(dictionaryPath));
+		stwv.setPeriodicPruning(100.0);
+		
+		dataSet = Filter.useFilter(dataSet, stwv);
+		dataSet.setClassIndex(0);
+		
+		if ("Sparse".equals(bektoreMota)) { 
+			// NonSparsetik Sparsera 
+			SparseToNonSparse nsts = new SparseToNonSparse();
+			nsts.setInputFormat(dataSet);
+			dataSet = Filter.useFilter(dataSet, nsts);
+		}
+		
+		dataSet.setRelationName("train_" + errepresentazioa + "_" + bektoreMota);
+		
+		return dataSet;
 	}
 }

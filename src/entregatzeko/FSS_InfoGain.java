@@ -61,5 +61,26 @@ public class FSS_InfoGain {
 		f.close();
 		System.out.println("\nArff-a atributuak kenduta ondo gorde da hemen: " + arffToSave);
 	}
+	
+	public static Instances atributuenHautapenaInstances(Instances dataSet) throws Exception {
+		if (dataSet.classIndex() == -1)
+			dataSet.setClassIndex(0);
+		String relationName = dataSet.relationName();
+		
+		AttributeSelection attSelection = new AttributeSelection();
+		InfoGainAttributeEval attEvaluator = new InfoGainAttributeEval();
+		Ranker ranker = new Ranker();
+		
+		ranker.setNumToSelect((int) (dataSet.numAttributes() * 0.8));
+		attSelection.setEvaluator(attEvaluator);
+		attSelection.setSearch(ranker);
+		
+		attSelection.SelectAttributes(dataSet);
+		
+		dataSet = attSelection.reduceDimensionality(dataSet);
+		dataSet.setRelationName(relationName);
+		
+		return dataSet;
+	}
 
 }

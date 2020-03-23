@@ -61,5 +61,19 @@ public class MakeCompatible {
 		System.out.println("Arff berria gordeta hemen: " + newArff);
 		
 	}
+	
+	public static Instances makeCompatibleInstances(Instances toChange, String dictionaryPath) throws Exception {
+		if (toChange.classIndex() == -1)
+			toChange.setClassIndex(toChange.numAttributes() - 1);
+		
+		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
+		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
+		fixedDictionary.setInputFormat(toChange);
+		toChange = Filter.useFilter(toChange, fixedDictionary);
+		
+		toChange.setRelationName("dev_transformRaw_compatible");
+		
+		return toChange;
+	}
 
 }

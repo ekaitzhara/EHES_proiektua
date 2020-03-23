@@ -2,15 +2,23 @@ package entregatzeko;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Random;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
+import weka.filters.unsupervised.instance.RemovePercentage;
 
 public class GetBaselineModel {
 
+	// PROZEDURA:	
+	// raw arff -> train,dev -> train_BOW_9999 (StringToWordVector) -> dictionary_9999 ->
+	// -> dev_BOW_9999 (compatible) -> train_BOW_1000 (FSS) -> dev_BOW_1000 (FSS compatible) ->
+	// -> bateragarriak -> NaiveBayes
+	
 	public static void main(String[] args) throws Exception {
 		
 		if(args.length == 0) {
@@ -19,27 +27,57 @@ public class GetBaselineModel {
 			System.exit(0);
 		}
 		
-		baselineSortu(args[0], args[1], args[2]);
+		baselineSortu(args[0], args[1]);
 	}
 	
-	public static void baselineSortu(String trainArff, String testArff, String modelPath) throws Exception {
-		DataSource source = new DataSource(trainArff);
-		Instances train = source.getDataSet();
-		if (train.classIndex() == -1)
-			train.setClassIndex(train.numAttributes() - 1);
+	public static void baselineSortu(String arffPath, String modelPath) throws Exception {
 		
-		
-		DataSource sourceTest = new DataSource(testArff);
-		Instances test = sourceTest.getDataSet();
-		if (test.classIndex() == -1)
-			test.setClassIndex(0);
+		DataSource source = new DataSource(arffPath);
+		Instances dataSet = source.getDataSet();
+		if (dataSet.classIndex() == -1)
+			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
 		NaiveBayes classifier = new NaiveBayes();
-		Evaluation evaluator = new Evaluation(train);
+		Evaluation evaluator = null;
 		
-		classifier.buildClassifier(train);
-		evaluator.evaluateModel(classifier, test);
+		// Aukerak
+		String errepresentazioa = "BOW";
+		String bektoreMota = "NonSparse";
 		
+		for (int i = 0; i < 11; i++) {
+			int seed = 1;
+			dataSet.randomize(new Random(seed));
+			RemovePercentage removePercentage = new RemovePercentage();
+			
+			// Train zatia lortzeko
+			removePercentage.setInputFormat(dataSet);
+			removePercentage.setPercentage(70);
+			removePercentage.setInvertSelection(true);	// %70-a lortzeko
+			Instances train = Filter.useFilter(dataSet, removePercentage);
+			
+			// Dev zatia lortzeko
+			removePercentage.setInputFormat(dataSet);
+			removePercentage.setInvertSelection(false);
+			Instances dev = Filter.useFilter(dataSet, removePercentage);
+			
+			String[] aux = arffPath.split("/");
+			String direktorioa = arffPath.replace(aux[aux.length-1],"");
+			String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+			
+			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
+			
+			Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
+			
+			Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+			
+			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+			
+			
+		}
+		
+		
+		
+		/*
 		// Model karpeta ez badago sortuta
 		String[] aux = modelPath.split("/");
 		String modelName = aux[aux.length-1];
@@ -59,6 +97,7 @@ public class GetBaselineModel {
 		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
 		System.out.println(evaluator.toClassDetailsString());
 		System.out.println(evaluator.toMatrixString());
+		*/
 	}
 	
 }

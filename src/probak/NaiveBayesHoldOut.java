@@ -2,6 +2,7 @@ package probak;
 
 import java.util.Random;
 
+import entregatzeko.GetRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.lazy.IBk;
@@ -14,6 +15,8 @@ import weka.filters.unsupervised.instance.RemovePercentage;
 public class NaiveBayesHoldOut {
 	
 	public static void main(String[] args) throws Exception {
+		
+		GetRaw.disableWarning();
 		
 		if(args.length == 0) {
 			System.out.println("LAGUNTZA");
@@ -40,7 +43,7 @@ public class NaiveBayesHoldOut {
 		String matrix = null;
 		double fMeasureOpt = -1.0;
 		
-		for (int i = 0; i < 50; i++) {	// 50 aldiz entrenatuko dugu, randomize-k aleatorioa egiten duelako
+		for (int i = 0; i < 11; i++) {	// 50 aldiz entrenatuko dugu, randomize-k aleatorioa egiten duelako
 			
 			int seed = 1;
 			dataSet.randomize(new Random(seed));

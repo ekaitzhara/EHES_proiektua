@@ -10,6 +10,9 @@ import weka.filters.unsupervised.attribute.NumericTransform;
 public class Predictions {
 	
 	public static void main(String[] args) throws Exception {
+		
+		GetRaw.disableWarning();
+		
 		if(args.length == 0) {
 			System.out.println("LAGUNTZA");
 			

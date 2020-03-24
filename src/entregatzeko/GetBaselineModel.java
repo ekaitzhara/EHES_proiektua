@@ -22,8 +22,23 @@ public class GetBaselineModel {
 	
 	public static void main(String[] args) throws Exception {
 		
+		GetRaw.disableWarning();
+		
 		if(args.length == 0) {
-			System.out.println("LAGUNTZA");
+			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
+			System.out.println("Aurrebaldintza:");
+			System.out.println("	Lehenik GetRaw entrenamendu datu-sortarako aplikatu izana, horrela arff zuzena sortuta edukiko duzulako");
+			System.out.println("	Erabaki nola deituko den modeloa");
+			System.out.println("	Sartu beharreko modeloaren path-a honelakoa izan behar da: /home/erabiltzaileIzena/workdir/Model/adibide.model");
+			System.out.println("Ondorengo balditza:");
+			System.out.println("	Model direktorioa automatikoki sortuko du ez badago sortuta");
+			System.out.println("	Aukeratu duzun izenarekin gordeko da modeloa");
+			System.out.println("	Aurrebalditzetan aipatutako path-a ondo sartu baduzu, ''Model'' karpetan edukiko duzu modeloa");
+			System.out.println("Argumentuen zerrenda eta deskribapena:");
+			System.out.println("	1 -> Modeloa sortzeko erabiliko den arff-a");
+			System.out.println("	2 -> Non gorde nahi duzun modelo fitxategiaren path-a");
+			System.out.println("Adibide hau jarraitu:\n");
+			System.out.println("		java -jar getBaselineModel.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/workdir/Model/adibide.model\n");
 			
 			System.exit(0);
 		}

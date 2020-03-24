@@ -13,6 +13,8 @@ public class TransformRaw {
 	
 	public static void main(String[] args) throws Exception {
 		
+		GetRaw.disableWarning();
+		
 		if(args.length == 0) {
 			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
 			System.out.println("Aurrebaldintza:");

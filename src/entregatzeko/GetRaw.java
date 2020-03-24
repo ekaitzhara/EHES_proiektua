@@ -20,6 +20,8 @@ public class GetRaw {
 
 	public static void main(String[] args) throws Exception {
 		
+		GetRaw.disableWarning();
+		
 		if (args.length == 0) {
 			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
 			System.out.println("Aurrebaldintza:");
@@ -127,5 +129,10 @@ public class GetRaw {
         File csv2 = new File(pathFileAux);
         csv2.delete();
 			        
+	}
+	
+	public static void disableWarning() {
+		System.err.close();
+		System.setErr(System.out);
 	}
 }

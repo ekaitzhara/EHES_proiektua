@@ -14,9 +14,22 @@ public class MakeCompatible {
 	
 	public static void main(String[] args) throws Exception {
 		
+		GetRaw.disableWarning();
+		
 		if(args.length == 0) {
-			System.out.println("LAGUNTZA");
-			
+			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
+			System.out.println("Aurrebaldintza:");
+			System.out.println("	Lehenik GetRaw aldatu nahi duzun datu-sortara aplikatu izana, horrela arff zuzena sortuta edukiko duelako");
+			System.out.println("	Gainera, TranformRaw ere aplikatuta egon behar da, sortu den fitxategia lehenengo argumentua izango da");
+			System.out.println("	Hiztegia sortuta egon behar du (TransformRaw-en sortzen da)");
+			System.out.println("Ondorengo balditza:");
+			System.out.println("	Errepresentazioa duen (ad. BOW) fitxategiaren direktorio berean sortuko da arff berria");
+			System.out.println("	Fitxategi berri hori, arff_BOW -ren atributu berdinak izango ditu, hau da, beren konpatiblea izango da");
+			System.out.println("Argumentuen zerrenda eta deskribapena:");
+			System.out.println("	1 -> transformRaw-en sortutako arff-aren path-a (errepresentazioa duena)");
+			System.out.println("	2 -> Aldatu nahi duzun arff fitxategiaren path-a");
+			System.out.println("Adibide hau jarraitu:\n");
+			System.out.println("		java -jar makeCompatible.jar /home/erabiltzaileIzena/workdir/Transform/adibideBOW.arff /home/erabiltzaileIzena/workdir/ARFF/aldatuNahiDuguna.arff\n");
 			System.exit(0);
 		}
 		

@@ -1,5 +1,6 @@
 package optimizing;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,6 +24,7 @@ import weka.classifiers.bayes.net.search.local.SimulatedAnnealing;
 import weka.classifiers.bayes.net.search.local.TAN;
 import weka.classifiers.bayes.net.search.local.TabuSearch;
 import weka.core.Instances;
+import weka.core.SelectedTag;
 import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -43,17 +45,21 @@ public class BayesNetParamOpt {
 		allEstimators.add(new SimpleEstimator());
 //		allEstimators.add(new BayesNetEstimator());
 		allEstimators.add(new BMAEstimator());
-		allEstimators.add(new MultiNomialBMAEstimator());
+//		allEstimators.add(new MultiNomialBMAEstimator());
 		
+		/*
 		ArrayList<SearchAlgorithm> allSearchAlgorithms = new ArrayList<SearchAlgorithm>();
 		allSearchAlgorithms.add(new K2());
-//		allSearchAlgorithms.add(new GeneticSearch());		// Tarda mucho
+		allSearchAlgorithms.add(new GeneticSearch());		// Tarda mucho
 		allSearchAlgorithms.add(new HillClimber());
-//		allSearchAlgorithms.add(new LAGDHillClimber());
-//		allSearchAlgorithms.add(new RepeatedHillClimber());
+		allSearchAlgorithms.add(new LAGDHillClimber());
+		allSearchAlgorithms.add(new RepeatedHillClimber());
 		allSearchAlgorithms.add(new SimulatedAnnealing());
 		allSearchAlgorithms.add(new TabuSearch());
 		allSearchAlgorithms.add(new TAN());
+		*/
+		
+		K2 searchAlgorithm = new K2();
 		
 		BayesNet classifier = new BayesNet();
 		Evaluation evaluator = null;
@@ -70,12 +76,16 @@ public class BayesNetParamOpt {
 		
 		
 		for (BayesNetEstimator estimator : allEstimators) {
-			for (SearchAlgorithm searchAlgorithm : allSearchAlgorithms) {
+//			for (SearchAlgorithm searchAlgorithm : allSearchAlgorithms) {
+			for (int i = 2; i < 11; i++) {
 				try {
 					classifier.setEstimator(estimator);
+					
+//					estimator.setAlpha(10.0);
+					searchAlgorithm.setMaxNrOfParents(i);
 					classifier.setSearchAlgorithm(searchAlgorithm);
 
-					// HOLD-OUT
+					// HOLD-OUT		10 aldiz egin --> for
 					// Aukerak
 					String errepresentazioa = "BOW";
 					String bektoreMota = "NonSparse";
@@ -110,7 +120,8 @@ public class BayesNetParamOpt {
 //					int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
 					int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
 					
-					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName());
+					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
+							+ " - maxParents: " + i);
 					
 					evaluator = new Evaluation(train_BOW_FSS);
 					classifier.buildClassifier(train_BOW_FSS);
@@ -148,7 +159,7 @@ public class BayesNetParamOpt {
 	
 	public static int klaseMinoritarioaLortu(Instances dataSet) {
 		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
-		if (klaseMinoritarioa == 0) {
+		if (dataSet.attributeStats(dataSet.classIndex()).nominalCounts[klaseMinoritarioa] == 0) {
 			int[] classCounts = dataSet.attributeStats(dataSet.classIndex()).nominalCounts;
 			int min = Integer.MAX_VALUE;
 			int min_pos = -1;
@@ -180,6 +191,13 @@ public class BayesNetParamOpt {
 		
 		classifier.buildClassifier(dataSet);
 		evaluator.evaluateModel(classifier, dataSet);
+		
+		// Model karpeta ez badago sortuta
+		String[] auxModel = modelPath.split("/");
+		String modelName = auxModel[auxModel.length-1];
+        File modelDirectory = new File(modelPath.replace(modelName, ""));
+        if (!modelDirectory.exists())
+        	modelDirectory.mkdir();
 		
 		SerializationHelper.write(modelPath, classifier);
 		

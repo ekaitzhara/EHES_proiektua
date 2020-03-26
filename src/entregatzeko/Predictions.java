@@ -40,9 +40,7 @@ public class Predictions {
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
 		if (dataSet.classIndex() == -1)
-			dataSet.setClassIndex(0);	// ???????????????????????
-		
-		
+			dataSet.setClassIndex(dataSet.numAttributes()-1);
 		
 		Classifier classifier = (Classifier) SerializationHelper.read(modelPath);
 		
@@ -50,7 +48,7 @@ public class Predictions {
 		for (int i = 0; i < dataSet.numInstances(); i++) {
 			double predictedValue = classifier.classifyInstance(dataSet.instance(i));
 			String predicted = dataSet.classAttribute().value((int) predictedValue);
-			System.out.println(i + ".garreb instantziaren estimazioa: " + predicted);
+			System.out.println(i + ".garren instantziaren estimazioa: " + predicted);
 		}
 		
 	}

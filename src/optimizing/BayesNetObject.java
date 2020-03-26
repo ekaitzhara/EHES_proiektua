@@ -2,61 +2,70 @@ package optimizing;
 
 import weka.classifiers.bayes.net.estimate.BayesNetEstimator;
 import weka.classifiers.bayes.net.search.SearchAlgorithm;
+import weka.classifiers.bayes.net.search.local.K2;
 
 public class BayesNetObject {
 	
 	// Parametroak
 	private BayesNetEstimator estimator;
-	private SearchAlgorithm searchAlgorithm;
-	private String batchSize;
-	private int numDecimalPlaces;
+	private K2 searchAlgorithm;
+	private double alpha;
+	private int maxNrOfParents;
 	
 	private double fMeasure;
 	
-	public BayesNetObject(BayesNetEstimator pEst, SearchAlgorithm searchAlg) {
-		
-		this.estimator = pEst;
-		this.searchAlgorithm = searchAlg;
-	}
-
-	public BayesNetObject(BayesNetEstimator estimator, SearchAlgorithm searchAlgorithm, String batchSize,
-			int numDecimalPlaces, double fMeasure) {
-		
+	
+	public BayesNetObject(BayesNetEstimator estimator, K2 searchAlgorithm, double alpha,
+			int maxNrOfParents, double fMeasure) {
+		super();
 		this.estimator = estimator;
 		this.searchAlgorithm = searchAlgorithm;
-		this.batchSize = batchSize;
-		this.numDecimalPlaces = numDecimalPlaces;
+		this.alpha = alpha;
+		this.maxNrOfParents = maxNrOfParents;
 		this.fMeasure = fMeasure;
 	}
 
 	
-	
+
 	public BayesNetEstimator getEstimator() {
 		return estimator;
 	}
 
-	public SearchAlgorithm getSearchAlgorithm() {
+
+
+	public K2 getSearchAlgorithm() {
 		return searchAlgorithm;
 	}
 
-	public String getBatchSize() {
-		return batchSize;
+
+
+	public double getAlpha() {
+		return alpha;
 	}
 
-	public int getNumDecimalPlaces() {
-		return numDecimalPlaces;
+
+
+	public int getMaxNrOfParents() {
+		return maxNrOfParents;
 	}
+
+
 
 	public double getfMeasure() {
 		return fMeasure;
 	}
 
 
+
 	@Override
 	public String toString() {
-		return "BayesNetObject [estimator=" + estimator.getClass().getSimpleName() + ", searchAlgorithm=" + searchAlgorithm.getClass().getSimpleName() + ", batchSize="
-				+ batchSize + ", numDecimalPlaces=" + numDecimalPlaces + ", fMeasure=" + fMeasure + "]";
+		return "BayesNetObject [estimator=" + estimator.getClass().getSimpleName() + ", searchAlgorithm=" + searchAlgorithm.getClass().getSimpleName() + ", alpha=" + alpha
+				+ ", maxNrOfParents=" + maxNrOfParents + ", fMeasure=" + fMeasure + "]";
 	}
+
+
+
+	
 
 	
 

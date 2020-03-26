@@ -28,6 +28,7 @@ import weka.core.SelectedTag;
 import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.estimators.Estimator;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
@@ -62,96 +63,53 @@ public class BayesNetParamOpt {
 		K2 searchAlgorithm = new K2();
 		
 		BayesNet classifier = new BayesNet();
-		Evaluation evaluator = null;
-		
-		String summary = null;
-		String classDetails = null;
-		String matrix = null;
 		
 		double fMeasureOpt = -1.0;
-		String batchSizeOpt = null;
-		int numDecPlacesOpt = -1;
 		BayesNetEstimator estimatorOpt = null;
-		SearchAlgorithm searchAlgOpt = null;
+		double alphaOpt = -1.0;
+		int maxNrOfParentsOpt = -1;
 		
 		
 		for (BayesNetEstimator estimator : allEstimators) {
 //			for (SearchAlgorithm searchAlgorithm : allSearchAlgorithms) {
-			for (int i = 2; i < 11; i++) {
-				try {
-					classifier.setEstimator(estimator);
-					
-//					estimator.setAlpha(10.0);
-					searchAlgorithm.setMaxNrOfParents(i);
-					classifier.setSearchAlgorithm(searchAlgorithm);
-
-					// HOLD-OUT		10 aldiz egin --> for
-					// Aukerak
-					String errepresentazioa = "BOW";
-					String bektoreMota = "NonSparse";
-					
-					int seed = 1;
-					dataSet.randomize(new Random(seed));
-					RemovePercentage removePercentage = new RemovePercentage();
-					
-					// Train zatia lortzeko
-					removePercentage.setInputFormat(dataSet);
-					removePercentage.setPercentage(70);
-					removePercentage.setInvertSelection(true);	// %70-a lortzeko
-					Instances train = Filter.useFilter(dataSet, removePercentage);
-					
-					// Dev zatia lortzeko
-					removePercentage.setInputFormat(dataSet);
-					removePercentage.setInvertSelection(false);
-					Instances dev = Filter.useFilter(dataSet, removePercentage);
-					
-					String[] aux = arffPath.split("/");
-					String direktorioa = arffPath.replace(aux[aux.length-1],"");
-					String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
-					
-					Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
-					
-					Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
-					
-					Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
-					
-					Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
-					
-//					int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
-					int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
-					
-					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
-							+ " - maxParents: " + i);
-					
-					evaluator = new Evaluation(train_BOW_FSS);
-					classifier.buildClassifier(train_BOW_FSS);
-					evaluator.evaluateModel(classifier, dev_BOW_FSS);
-					
-					System.out.println("fMeasure: " + evaluator.fMeasure(klaseMax));
-					
-					
-					if (evaluator.fMeasure(klaseMax) > fMeasureOpt) {	// Klase minimoarekin -> Nan edo 0.0
-						fMeasureOpt = evaluator.fMeasure(klaseMax);
-						estimatorOpt = estimator;
-						searchAlgOpt = searchAlgorithm;
+			for (int i = 0; i < 6; i++) {	// MaxParents
+				for (double j = 0.0; j < 6.0; j=j+1.0) {	// Alpha
 						
-						summary = evaluator.toSummaryString("\n === Summary ===\n", false);
-						classDetails = evaluator.toClassDetailsString();
-						matrix = evaluator.toMatrixString();
+					try {
+						estimator.setAlpha(j);
+						classifier.setEstimator(estimator);
+						
+						searchAlgorithm.setMaxNrOfParents(i);
+						classifier.setSearchAlgorithm(searchAlgorithm);
+	
+						// HOLD-OUT		10 aldiz egin --> for
+						// Aukerak
+						String errepresentazioa = "BOW";
+						String bektoreMota = "NonSparse";
+						
+						
+						double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
+						
+						System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
+								+ " - maxParents: " + i + " - alpha: " + j + " | fMeasureAvg => " + fMeasureAvg);
+						
+						if (fMeasureAvg > fMeasureOpt) {	// Klase minimoarekin -> Nan edo 0.0
+							fMeasureOpt = fMeasureAvg;
+							estimatorOpt = estimator;
+							alphaOpt = j;
+							maxNrOfParentsOpt = i;
+						}
+					}catch (Exception e) {	// Parametroren bat ez bada egokia, salta egin dezan
+						break;
 					}
-				}catch (Exception e) {	// Parametroren bat ez bada egokia, salta egin dezan
-					break;
 				}
 			}
 		}
 		
 		System.out.println();
 		System.out.println("Hoberenaren emaitzak: " + fMeasureOpt+ " lortu duena" );
-		System.out.println(summary);
-		System.out.println(classDetails);
-		System.out.println(matrix);
 		
-		paramsOpt = new BayesNetObject(estimatorOpt, searchAlgOpt, null, -1000, fMeasureOpt);
+		paramsOpt = new BayesNetObject(estimatorOpt, searchAlgorithm, alphaOpt, maxNrOfParentsOpt, fMeasureOpt);
 		
 		return paramsOpt;
 	}
@@ -186,8 +144,13 @@ public class BayesNetParamOpt {
 		BayesNet classifier = new BayesNet();
 		Evaluation evaluator = new Evaluation(dataSet);
 		
+		BayesNetEstimator estim = paramsOpt.getEstimator();
+		estim.setAlpha(paramsOpt.getAlpha());
 		classifier.setEstimator(paramsOpt.getEstimator());
-		classifier.setSearchAlgorithm(paramsOpt.getSearchAlgorithm());
+		
+		K2 searchAlg = paramsOpt.getSearchAlgorithm();
+		searchAlg.setMaxNrOfParents(paramsOpt.getMaxNrOfParents());
+		classifier.setSearchAlgorithm(searchAlg);
 		
 		classifier.buildClassifier(dataSet);
 		evaluator.evaluateModel(classifier, dataSet);
@@ -210,6 +173,80 @@ public class BayesNetParamOpt {
 		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
 		System.out.println(evaluator.toClassDetailsString());
 		System.out.println(evaluator.toMatrixString());
+		
+	}
+	
+	
+	private static double holdOutAplikatu(Instances dataSet, String arffPath, String errepresentazioa, String bektoreMota, BayesNet classifier) throws Exception {
+		double emaitza = -1.0;
+		double totala = 0.0;
+		int iterazioKop = 10;
+		
+		System.out.println("--------------");
+		
+		for (int i = 0; i < iterazioKop; i++) {
+			
+			int seed = 1;
+			dataSet.randomize(new Random(seed));
+			RemovePercentage removePercentage = new RemovePercentage();
+			
+			// Train zatia lortzeko
+			removePercentage.setInputFormat(dataSet);
+			removePercentage.setPercentage(70);
+			removePercentage.setInvertSelection(true);	// %70-a lortzeko
+			Instances train = Filter.useFilter(dataSet, removePercentage);
+			
+			// Dev zatia lortzeko
+			removePercentage.setInputFormat(dataSet);
+			removePercentage.setInvertSelection(false);
+			Instances dev = Filter.useFilter(dataSet, removePercentage);
+			
+			String[] aux = arffPath.split("/");
+			String direktorioa = arffPath.replace(aux[aux.length-1],"");
+			String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+			
+			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
+			
+			Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
+			
+			Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+			
+			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+			
+	//					int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
+			int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
+			
+			
+			Evaluation evaluator = new Evaluation(train_BOW_FSS);
+			classifier.buildClassifier(train_BOW_FSS);
+			evaluator.evaluateModel(classifier, dev_BOW_FSS);
+			
+			System.out.println("	" + i + " bueltaren fMeasure: " + evaluator.fMeasure(klaseMax));
+			totala = totala + evaluator.fMeasure(klaseMax);
+		}
+		System.out.println("--------------");
+		emaitza = totala / iterazioKop;
+		return emaitza;
+	}
+	
+	private static double fCVAplikatu(Instances dataSet, String arffPath, String errepresentazioa, String bektoreMota, BayesNet classifier) throws Exception {
+		
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+		
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		
+		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+		
+		int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
+		
+		Evaluation evaluator = new Evaluation(train_BOW_FSS);
+		classifier.buildClassifier(train_BOW_FSS);
+		
+		evaluator.crossValidateModel(classifier, dataSet, 10, new Random(1));
+		
+		return evaluator.fMeasure(klaseMax);
 		
 	}
 }

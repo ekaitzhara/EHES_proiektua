@@ -2,10 +2,18 @@ package probak;
 
 import java.util.Random;
 
+import entregatzeko.FSS_InfoGain;
+import entregatzeko.FSS_MakeCompatible;
 import entregatzeko.GetRaw;
+import entregatzeko.MakeCompatible;
+import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.SMO;
 import weka.classifiers.lazy.IBk;
+import weka.classifiers.meta.Bagging;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -34,55 +42,56 @@ public class NaiveBayesHoldOut {
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
 		if (dataSet.classIndex() == -1)
-			dataSet.setClassIndex(0);
+			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
-		int klaseMinoritarioa = klaseMInoritarioaLortu(dataSet);
+			
+		String errepresentazioa = "BOW";
+		String bektoreMota = "NonSparse";
 		
-		String summary = null;
-		String classDetails = null;
-		String matrix = null;
-		double fMeasureOpt = -1.0;
+		int seed = 1;
+		dataSet.randomize(new Random(seed));
+		RemovePercentage removePercentage = new RemovePercentage();
 		
-		for (int i = 0; i < 11; i++) {	// 50 aldiz entrenatuko dugu, randomize-k aleatorioa egiten duelako
-			
-			int seed = 1;
-			dataSet.randomize(new Random(seed));
-			RemovePercentage removePercentage = new RemovePercentage();
-			
-			// Train zatia lortzeko
-			removePercentage.setInputFormat(dataSet);
-			removePercentage.setPercentage(70);
-			removePercentage.setInvertSelection(true);	// %70-a lortzeko
-			Instances train = Filter.useFilter(dataSet, removePercentage);
-			
-			// Test zatia lortzeko
-			removePercentage.setInputFormat(dataSet);
-			removePercentage.setInvertSelection(false);
-			Instances test = Filter.useFilter(dataSet, removePercentage);
-			
-			NaiveBayes classifier = new NaiveBayes();
-			classifier.buildClassifier(train);
-			
-			Evaluation evaluator = new Evaluation(train);
-			evaluator.evaluateModel(classifier, test);
-			System.out.println(i+" bueltaren zuzenen fMeasure: " + evaluator.fMeasure(klaseMinoritarioa));
-			
-			if (evaluator.fMeasure(klaseMinoritarioa) > fMeasureOpt) {
-				fMeasureOpt = evaluator.fMeasure(klaseMinoritarioa);
-				summary = evaluator.toSummaryString("\n === Summary ===\n", false);
-				classDetails = evaluator.toClassDetailsString();
-				matrix = evaluator.toMatrixString();
-			}
-		}	
-		System.out.println();
-		System.out.println("Hoberenaren emaitzak: " + fMeasureOpt+ " lortu duena" );
-		System.out.println(summary);
-		System.out.println(classDetails);
-		System.out.println(matrix);
-	
+		// Train zatia lortzeko
+		removePercentage.setInputFormat(dataSet);
+		removePercentage.setPercentage(70);
+		removePercentage.setInvertSelection(true);	// %70-a lortzeko
+		Instances train = Filter.useFilter(dataSet, removePercentage);
+		
+		// Dev zatia lortzeko
+		removePercentage.setInputFormat(dataSet);
+		removePercentage.setInvertSelection(false);
+		Instances dev = Filter.useFilter(dataSet, removePercentage);
+		
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+		
+		Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
+		
+		Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
+		
+		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+		
+		Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+		
+		int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
+		
+		BayesNet classifier = new BayesNet();
+		
+		Evaluation evaluator = new Evaluation(train_BOW_FSS);
+		classifier.buildClassifier(train_BOW_FSS);
+		evaluator.evaluateModel(classifier, dev_BOW_FSS);
+		
+		System.out.println("fMeasure: " + evaluator.fMeasure(klaseMinoritarioa));
+		
+		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
+		System.out.println(evaluator.toClassDetailsString());
+		System.out.println(evaluator.toMatrixString());
+		
 	}
 
-	public static int klaseMInoritarioaLortu(Instances dataSet) {
+	public static int klaseMinoritarioaLortu(Instances dataSet) {
 		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
 		if (klaseMinoritarioa == 0) {
 			int[] classCounts = dataSet.attributeStats(dataSet.classIndex()).nominalCounts;

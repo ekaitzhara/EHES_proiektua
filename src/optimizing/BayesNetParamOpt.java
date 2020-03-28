@@ -84,11 +84,12 @@ public class BayesNetParamOpt {
 	
 						// HOLD-OUT		10 aldiz egin --> for
 						// Aukerak
-						String errepresentazioa = "BOW";
+						String errepresentazioa = "TFIDF";
 						String bektoreMota = "NonSparse";
 						
 						
-						double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
+//						double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
+						double fMeasureAvg = fCVAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
 						
 						System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
 								+ " - maxParents: " + i + " - alpha: " + j + " | fMeasureAvg => " + fMeasureAvg);
@@ -213,7 +214,7 @@ public class BayesNetParamOpt {
 			
 			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
 			
-	//					int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
+//			int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
 			int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
 			
 			
@@ -244,7 +245,7 @@ public class BayesNetParamOpt {
 		Evaluation evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);
 		
-		evaluator.crossValidateModel(classifier, dataSet, 10, new Random(1));
+		evaluator.crossValidateModel(classifier, train_BOW_FSS, 10, new Random(1));
 		
 		return evaluator.fMeasure(klaseMax);
 		

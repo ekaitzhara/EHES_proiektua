@@ -57,14 +57,14 @@ public class TransformRaw {
 		if (train.classIndex() == -1)
 			train.setClassIndex(train.numAttributes()-1);
 		
-		System.out.println("1" + train.firstInstance());
+		System.out.println("1 -> " + train.firstInstance());
 		
 		Integer hiztegiZabalera = Integer.MAX_VALUE;
 		System.out.println(hiztegiZabalera);
 		
 		StringToWordVector stwv = new StringToWordVector();
 		stwv.setWordsToKeep(hiztegiZabalera);
-		stwv.setMinTermFreq(3);
+		stwv.setMinTermFreq(2);
 		stwv.setAttributeIndices("first-last");
 		if ("TFIDF".equals(errepresentazioa)) {
 			stwv.setTFTransform(true);
@@ -84,7 +84,7 @@ public class TransformRaw {
 		train = Filter.useFilter(train, stwv);
 		train.setClassIndex(0);
 //		System.out.println(train.numAttributes());
-		System.out.println("2" + train.firstInstance());
+		System.out.println("2 -> " + train.firstInstance());
 		
 		if ("Sparse".equals(bektoreMota)) { 
 			// NonSparsetik Sparsera 
@@ -107,7 +107,7 @@ public class TransformRaw {
 		
 		StringToWordVector stwv = new StringToWordVector();
 		stwv.setWordsToKeep(hiztegiZabalera);
-		stwv.setMinTermFreq(3);
+		stwv.setMinTermFreq(2);
 		stwv.setAttributeIndices("first-last");
 		if ("TFIDF".equals(errepresentazioa)) {
 			stwv.setTFTransform(true);

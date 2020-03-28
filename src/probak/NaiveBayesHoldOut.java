@@ -10,6 +10,8 @@ import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.bayes.net.estimate.BMAEstimator;
+import weka.classifiers.bayes.net.estimate.SimpleEstimator;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.meta.Bagging;
@@ -78,6 +80,7 @@ public class NaiveBayesHoldOut {
 		int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
 		
 		BayesNet classifier = new BayesNet();
+		classifier.setEstimator(new BMAEstimator());
 		
 		Evaluation evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);

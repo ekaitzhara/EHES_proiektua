@@ -34,7 +34,7 @@ import weka.filters.unsupervised.instance.RemovePercentage;
 
 public class BayesNetParamOpt {
 	
-	public static BayesNetObject optimizatuParametroak(String arffPath) throws Exception {
+	public static BayesNetObject optimizatuParametroak(String arffPath, String errepresentazioa, String bektoreMota) throws Exception {
 		BayesNetObject paramsOpt = null;
 		
 		DataSource source = new DataSource(arffPath);
@@ -72,8 +72,8 @@ public class BayesNetParamOpt {
 		
 		for (BayesNetEstimator estimator : allEstimators) {
 //			for (SearchAlgorithm searchAlgorithm : allSearchAlgorithms) {
-			for (int i = 0; i < 6; i++) {	// MaxParents
-				for (double j = 0.0; j < 6.0; j=j+1.0) {	// Alpha
+			for (int i = 0; i < 3; i++) {	// MaxParents
+				for (double j = 0.0; j < 3.0; j=j+1.0) {	// Alpha
 						
 					try {
 						estimator.setAlpha(j);
@@ -82,11 +82,7 @@ public class BayesNetParamOpt {
 						searchAlgorithm.setMaxNrOfParents(i);
 						classifier.setSearchAlgorithm(searchAlgorithm);
 	
-						// HOLD-OUT		10 aldiz egin --> for
 						// Aukerak
-						String errepresentazioa = "TFIDF";
-						String bektoreMota = "NonSparse";
-						
 						
 //						double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
 						double fMeasureAvg = fCVAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
@@ -135,7 +131,7 @@ public class BayesNetParamOpt {
 	}
 
 
-	public static void modeloaGorde(String arffPath, BayesNetObject paramsOpt, String modelPath) throws Exception {
+	public static void modeloaGorde(String arffPath, BayesNetObject paramsOpt, String modelPath, String errepresentazioa, String bektoreMota) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
@@ -153,8 +149,16 @@ public class BayesNetParamOpt {
 		searchAlg.setMaxNrOfParents(paramsOpt.getMaxNrOfParents());
 		classifier.setSearchAlgorithm(searchAlg);
 		
-		classifier.buildClassifier(dataSet);
-		evaluator.evaluateModel(classifier, dataSet);
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+		
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		
+		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+		
+		classifier.buildClassifier(train_BOW_FSS);
+		evaluator.evaluateModel(classifier, train_BOW_FSS);
 		
 		// Model karpeta ez badago sortuta
 		String[] auxModel = modelPath.split("/");

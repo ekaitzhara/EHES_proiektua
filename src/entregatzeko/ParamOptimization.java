@@ -45,7 +45,10 @@ public class ParamOptimization {
 
 	public static void parametroakOptimizatu(String arffPath, String modelPath) throws Exception {
 		
-		BayesNetObject paramsOpt = BayesNetParamOpt.optimizatuParametroak(arffPath);
+		String errepresentazioa = "TFIDF";
+		String bektoreMota = "NonSparse";
+		
+		BayesNetObject paramsOpt = BayesNetParamOpt.optimizatuParametroak(arffPath, errepresentazioa, bektoreMota);
 		
 		String[] aux = arffPath.split("/");
 		String direktorioa = arffPath.replace(aux[aux.length-1],"");
@@ -55,7 +58,7 @@ public class ParamOptimization {
 		
 		System.out.println(paramsOpt.toString());
 		
-		BayesNetParamOpt.modeloaGorde(arffPath, paramsOpt, modelPath);
+		BayesNetParamOpt.modeloaGorde(arffPath, paramsOpt, modelPath, errepresentazioa, bektoreMota);
 	}
 	
 }

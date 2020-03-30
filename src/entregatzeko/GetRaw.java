@@ -14,6 +14,7 @@ import weka.filters.unsupervised.attribute.Add;
 import weka.filters.unsupervised.attribute.NominalToString;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.RenameAttribute;
 import weka.filters.unsupervised.attribute.RenameNominalValues;
 
 public class GetRaw {
@@ -96,6 +97,13 @@ public class GetRaw {
         if(data.classIndex() == -1)
         	data.setClassIndex(data.numAttributes() - 1);
         
+        RenameAttribute rename = new RenameAttribute();
+        rename.setAttributeIndices("last");
+        rename.setReplace("klasea");
+        rename.setInputFormat(data);
+        data = Filter.useFilter(data, rename);
+        System.out.println(data.classAttribute().name());
+        
         System.out.println(data.numClasses());
         if (data.numClasses() == 1) {
         	NumericToNominal numToNom = new NumericToNominal();
@@ -110,7 +118,7 @@ public class GetRaw {
         	
         	Add addNominal = new Add();
         	addNominal.setAttributeIndex("last");
-        	addNominal.setAttributeName("label");
+        	addNominal.setAttributeName("klasea");
         	addNominal.setNominalLabels("DESC,ENTY,ABBR,HUM,NUM,LOC");
         	addNominal.setInputFormat(data);
         	data = Filter.useFilter(data, addNominal);

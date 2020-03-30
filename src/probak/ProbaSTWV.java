@@ -29,7 +29,7 @@ public class ProbaSTWV {
 		
 		stwv.setAttributeIndices("first-last");
 		stwv.setWordsToKeep(10000000);
-		stwv.setMinTermFreq(-1);
+		stwv.setMinTermFreq(4);
 		stwv.setPeriodicPruning(100.0);
 		stwv.setInputFormat(dataSet);
 		Instances vectors = Filter.useFilter(dataSet, stwv);

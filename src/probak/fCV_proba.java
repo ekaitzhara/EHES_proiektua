@@ -33,10 +33,9 @@ public class fCV_proba {
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
-//		int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
-		int klaseMin = Utils.minIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
+//		int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 		
-		Evaluation evaluator = new Evaluation(train_BOW_FSS);
+		Evaluation evaluator = new Evaluation(train_BOW);
 		classifier.buildClassifier(train_BOW_FSS);
 		
 		evaluator.crossValidateModel(classifier, train_BOW_FSS, 10, new Random(1));
@@ -44,6 +43,7 @@ public class fCV_proba {
 		int klaseMinoritarioa = NaiveBayesHoldOut.klaseMinoritarioaLortu(dataSet);
 		
 		System.out.println("fMeasure: " + evaluator.fMeasure(klaseMinoritarioa));
+		System.out.println(train_BOW_FSS.numAttributes());
 		
 		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
 		System.out.println(evaluator.toClassDetailsString());

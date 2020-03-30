@@ -52,8 +52,9 @@ public class FSS_InfoGain {
 		InfoGainAttributeEval attEvaluator = new InfoGainAttributeEval();
 		Ranker ranker = new Ranker();
 		
-		ranker.setNumToSelect((int) (train.numAttributes() * portzentaia / 100));	// % 80 jarriko diogu
-//		ranker.setThreshold(2.0);
+//		ranker.setNumToSelect((int) (train.numAttributes() * portzentaia / 100));	// % 80 jarriko diogu
+//		ranker.setNumToSelect(-1);
+//		ranker.setThreshold(5.0);
 		attSelection.setEvaluator(attEvaluator);
 		attSelection.setSearch(ranker);
 		
@@ -85,11 +86,15 @@ public class FSS_InfoGain {
 			dataSet.setClassIndex(0);
 		String relationName = dataSet.relationName();
 		
+		System.out.println(dataSet.numAttributes());
+		
 		AttributeSelection attSelection = new AttributeSelection();
 		InfoGainAttributeEval attEvaluator = new InfoGainAttributeEval();
 		Ranker ranker = new Ranker();
 		
-		ranker.setNumToSelect((int) (dataSet.numAttributes() * 0.1));
+//		ranker.setNumToSelect((int) (dataSet.numAttributes() * 0.9));
+		ranker.setNumToSelect(-1);
+		ranker.setThreshold(0.0);
 		attSelection.setEvaluator(attEvaluator);
 		attSelection.setSearch(ranker);
 		
@@ -97,6 +102,8 @@ public class FSS_InfoGain {
 		
 		dataSet = attSelection.reduceDimensionality(dataSet);
 		dataSet.setRelationName(relationName);
+		
+		System.out.println(dataSet.numAttributes());
 		
 		return dataSet;
 	}

@@ -107,6 +107,7 @@ public class TransformRaw {
 		
 		StringToWordVector stwv = new StringToWordVector();
 		stwv.setWordsToKeep(hiztegiZabalera);
+		stwv.setPeriodicPruning(100.0);
 		stwv.setMinTermFreq(2);
 		stwv.setAttributeIndices("first-last");
 		if ("TFIDF".equals(errepresentazioa)) {

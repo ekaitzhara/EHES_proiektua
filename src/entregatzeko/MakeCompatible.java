@@ -85,6 +85,9 @@ public class MakeCompatible {
 		toChange = Filter.useFilter(toChange, fixedDictionary);
 		
 		toChange.setRelationName("dev_transformRaw_compatible");
+		FileWriter f = new FileWriter("/home/ekaitzhara/Documentos/dev_fss.arff");
+		f.write(toChange.toString());
+		f.close();
 		
 		return toChange;
 	}

@@ -60,13 +60,13 @@ public class TransformRaw {
 		System.out.println("1 -> " + train.firstInstance());
 		
 		Integer hiztegiZabalera = Integer.MAX_VALUE;
-		System.out.println(hiztegiZabalera);
 		
 		StringToWordVector stwv = new StringToWordVector();
-		stwv.setWordsToKeep(hiztegiZabalera);
+
 		stwv.setPeriodicPruning(100.0);
 		stwv.setMinTermFreq(-1);
-		stwv.setAttributeIndices("first-last");
+		stwv.setWordsToKeep(hiztegiZabalera);
+		
 		if ("TFIDF".equals(errepresentazioa)) {
 			stwv.setTFTransform(true);
 			stwv.setIDFTransform(true);
@@ -76,12 +76,14 @@ public class TransformRaw {
 			stwv.setIDFTransform(false);
 			stwv.setTFTransform(false);
 		}
-		stwv.setInputFormat(train);
+		stwv.setAttributeIndices("first");
+		
 		
 		// Gorde dictionary
 		stwv.setDictionaryFileToSaveTo(new File(direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));
-		stwv.setPeriodicPruning(100.0);
+//		stwv.setPeriodicPruning(100.0);
 		
+		stwv.setInputFormat(train);
 		train = Filter.useFilter(train, stwv);
 		train.setClassIndex(0);
 //		System.out.println(train.numAttributes());
@@ -98,6 +100,8 @@ public class TransformRaw {
 		FileWriter f = new FileWriter(newArff);
 		f.write(train.toString());
 		f.close();
+		
+		System.out.println(train.numAttributes());
 		
 		System.out.println("Train " + errepresentazioa + " eta " + bektoreMota + " gordeta hemen: " + newArff);
 		

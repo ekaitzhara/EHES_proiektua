@@ -22,7 +22,7 @@ public class fCV_proba {
 		
 		BayesNet classifier = new BayesNet();
 			
-		String errepresentazioa = "BOW";
+		String errepresentazioa = "TF";
 		String bektoreMota = "NonSparse";
 		
 		String[] aux = arffPath.split("/");

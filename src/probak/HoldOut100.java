@@ -1,5 +1,6 @@
 package probak;
 
+import java.io.FileWriter;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;
@@ -25,7 +26,7 @@ public class HoldOut100 {
 			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
 			
-		String errepresentazioa = "TFIDF";
+		String errepresentazioa = "TF";
 		String bektoreMota = "NonSparse";
 		
 		double pctCorrect = 0.0;
@@ -59,6 +60,7 @@ public class HoldOut100 {
 			Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 			
 			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+			
 			
 			int klaseMinoritarioa = NaiveBayesHoldOut.klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
 //			int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);

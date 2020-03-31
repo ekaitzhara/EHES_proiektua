@@ -86,14 +86,16 @@ public class FSS_InfoGain {
 			dataSet.setClassIndex(0);
 		String relationName = dataSet.relationName();
 		
-		System.out.println(dataSet.numAttributes());
+		System.out.println("FSS aurretik " + dataSet.numAttributes());
 		
 		AttributeSelection attSelection = new AttributeSelection();
 		InfoGainAttributeEval attEvaluator = new InfoGainAttributeEval();
 		Ranker ranker = new Ranker();
 		
 //		ranker.setNumToSelect((int) (dataSet.numAttributes() * 0.9));
-		ranker.setNumToSelect(-1);
+//		ranker.setNumToSelect(-1);
+		ranker.setNumToSelect(dataSet.numAttributes() * 5 / 100);
+		
 		ranker.setThreshold(0.0);
 		attSelection.setEvaluator(attEvaluator);
 		attSelection.setSearch(ranker);
@@ -103,7 +105,11 @@ public class FSS_InfoGain {
 		dataSet = attSelection.reduceDimensionality(dataSet);
 		dataSet.setRelationName(relationName);
 		
-		System.out.println(dataSet.numAttributes());
+		System.out.println("FSS eta gero " + dataSet.numAttributes());
+		
+		FileWriter f = new FileWriter("/home/ekaitzhara/Documentos/fss.arff");
+		f.write(dataSet.toString());
+		f.close();
 		
 		return dataSet;
 	}

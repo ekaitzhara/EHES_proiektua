@@ -10,6 +10,7 @@ import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.net.estimate.BMAEstimator;
+import weka.classifiers.bayes.net.estimate.SimpleEstimator;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -26,7 +27,7 @@ public class HoldOut100 {
 			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
 			
-		String errepresentazioa = "TF";
+		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
 		double pctCorrect = 0.0;
@@ -66,6 +67,7 @@ public class HoldOut100 {
 //			int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 			
 			BayesNet classifier = new BayesNet();
+			classifier.setEstimator(new SimpleEstimator());
 			
 			Evaluation evaluator = new Evaluation(train_BOW_FSS);
 			classifier.buildClassifier(train_BOW_FSS);

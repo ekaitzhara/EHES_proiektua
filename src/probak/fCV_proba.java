@@ -6,6 +6,10 @@ import entregatzeko.FSS_InfoGain;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.net.estimate.BMAEstimator;
+import weka.classifiers.bayes.net.estimate.BayesNetEstimator;
+import weka.classifiers.bayes.net.estimate.MultiNomialBMAEstimator;
+import weka.classifiers.bayes.net.estimate.SimpleEstimator;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -22,7 +26,7 @@ public class fCV_proba {
 		
 		BayesNet classifier = new BayesNet();
 			
-		String errepresentazioa = "TF";
+		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
 		String[] aux = arffPath.split("/");
@@ -35,7 +39,9 @@ public class fCV_proba {
 		
 //		int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 		
-		Evaluation evaluator = new Evaluation(train_BOW);
+		classifier.setEstimator(new SimpleEstimator());
+		
+		Evaluation evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);
 		
 		evaluator.crossValidateModel(classifier, train_BOW_FSS, 10, new Random(1));

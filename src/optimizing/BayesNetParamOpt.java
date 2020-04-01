@@ -42,24 +42,7 @@ public class BayesNetParamOpt {
 		if (dataSet.classIndex() == -1)
 			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
-		ArrayList<BayesNetEstimator> allEstimators = new ArrayList<BayesNetEstimator>();
-		allEstimators.add(new SimpleEstimator());
-//		allEstimators.add(new BayesNetEstimator());
-		allEstimators.add(new BMAEstimator());
-//		allEstimators.add(new MultiNomialBMAEstimator());
-		
-		/*
-		ArrayList<SearchAlgorithm> allSearchAlgorithms = new ArrayList<SearchAlgorithm>();
-		allSearchAlgorithms.add(new K2());
-		allSearchAlgorithms.add(new GeneticSearch());		// Tarda mucho
-		allSearchAlgorithms.add(new HillClimber());
-		allSearchAlgorithms.add(new LAGDHillClimber());
-		allSearchAlgorithms.add(new RepeatedHillClimber());
-		allSearchAlgorithms.add(new SimulatedAnnealing());
-		allSearchAlgorithms.add(new TabuSearch());
-		allSearchAlgorithms.add(new TAN());
-		*/
-		
+		SimpleEstimator estimator = new SimpleEstimator();
 		K2 searchAlgorithm = new K2();
 		
 		BayesNet classifier = new BayesNet();
@@ -69,36 +52,35 @@ public class BayesNetParamOpt {
 		double alphaOpt = -1.0;
 		int maxNrOfParentsOpt = -1;
 		
-		
-		for (BayesNetEstimator estimator : allEstimators) {
-//			for (SearchAlgorithm searchAlgorithm : allSearchAlgorithms) {
-			for (int i = 0; i < 3; i++) {	// MaxParents
-				for (double j = 0.0; j < 3.0; j=j+1.0) {	// Alpha
-						
-					try {
-						estimator.setAlpha(j);
-						classifier.setEstimator(estimator);
-						
-						searchAlgorithm.setMaxNrOfParents(i);
-						classifier.setSearchAlgorithm(searchAlgorithm);
-	
-						// Aukerak
-						
+		for (int i = 0; i < 6; i++) {	// MaxParents
+			for (double j = 0.0; j < 6.0; j=j+1.0) {	// Alpha
+					
+				try {
+					estimator.setAlpha(j);
+					classifier.setEstimator(estimator);
+					
+					searchAlgorithm.setMaxNrOfParents(i);
+					classifier.setSearchAlgorithm(searchAlgorithm);
+
+					// Aukerak
 //						double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
-						double fMeasureAvg = fCVAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
-						
-						System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
-								+ " - maxParents: " + i + " - alpha: " + j + " | fMeasureAvg => " + fMeasureAvg);
-						
-						if (fMeasureAvg > fMeasureOpt) {	// Klase minimoarekin -> Nan edo 0.0
-							fMeasureOpt = fMeasureAvg;
-							estimatorOpt = estimator;
-							alphaOpt = j;
-							maxNrOfParentsOpt = i;
-						}
-					}catch (Exception e) {	// Parametroren bat ez bada egokia, salta egin dezan
-						break;
+					double fMeasureAvg = fCVAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
+					
+					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
+							+ " - maxParents: " + i + " - alpha: " + j + " | fMeasureAvg => " + fMeasureAvg);
+					
+					if (fMeasureAvg > fMeasureOpt) {	// Klase minimoarekin -> Nan edo 0.0
+						fMeasureOpt = fMeasureAvg;
+						estimatorOpt = estimator;
+						alphaOpt = j;
+						maxNrOfParentsOpt = i;
 					}
+				}catch (Exception e) {	// Parametroren bat ez bada egokia, salta egin dezan
+					System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					System.out.println("ERROR:");
+					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
+							+ " - maxParents: " + i + " - alpha: " + j);
+					break;
 				}
 			}
 		}

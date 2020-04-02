@@ -1,6 +1,7 @@
 package entregatzeko;
 
 import weka.classifiers.Classifier;
+import weka.classifiers.bayes.BayesNet;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -11,7 +12,7 @@ public class Predictions {
 	
 	public static void main(String[] args) throws Exception {
 		
-		GetRaw.disableWarning();
+//		GetRaw.disableWarning();
 		
 		if(args.length == 0) {
 			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
@@ -42,7 +43,7 @@ public class Predictions {
 		if (dataSet.classIndex() == -1)
 			dataSet.setClassIndex(dataSet.numAttributes()-1);
 		
-		Classifier classifier = (Classifier) SerializationHelper.read(modelPath);
+		BayesNet classifier = (BayesNet) SerializationHelper.read(modelPath);
 		
 		
 		for (int i = 0; i < dataSet.numInstances(); i++) {

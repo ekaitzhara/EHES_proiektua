@@ -6,17 +6,13 @@ import entregatzeko.FSS_InfoGain;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.bayes.net.estimate.BMAEstimator;
-import weka.classifiers.bayes.net.estimate.BayesNetEstimator;
-import weka.classifiers.bayes.net.estimate.MultiNomialBMAEstimator;
 import weka.classifiers.bayes.net.estimate.SimpleEstimator;
 import weka.classifiers.bayes.net.search.local.K2;
 import weka.core.Instances;
-import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 
-public class fCV_proba {
-	
+public class ezZintzoa_proba {
+
 	public static void main(String[] args) throws Exception {
 
 		long startTime = System.nanoTime();
@@ -43,17 +39,17 @@ public class fCV_proba {
 //		int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 		
 		SimpleEstimator estimator = new SimpleEstimator();
-		estimator.setAlpha(0.1);
+		estimator.setAlpha(0.0001);
 		classifier.setEstimator(estimator);
 		
 		K2 searchAlgorithm = new K2();
-		searchAlgorithm.setMaxNrOfParents(9);
+		searchAlgorithm.setMaxNrOfParents(5);
 		classifier.setSearchAlgorithm(searchAlgorithm);
 		
 		Evaluation evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);
 		
-		evaluator.crossValidateModel(classifier, train_BOW_FSS, 10, new Random(1));
+		evaluator.evaluateModel(classifier, train_BOW_FSS);
 		
 		int klaseMinoritarioa = NaiveBayesHoldOut.klaseMinoritarioaLortu(dataSet);
 		
@@ -64,10 +60,8 @@ public class fCV_proba {
 		System.out.println(evaluator.toClassDetailsString());
 		System.out.println(evaluator.toMatrixString());
 		
-		
 		long fCV_time = (System.nanoTime()-startTime)/1000000000;
 		System.out.println("\nfCV Denbora: " + fCV_time + " seg");
 		
 	}
-
 }

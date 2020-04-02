@@ -45,13 +45,14 @@ public class ParamOptimization {
 
 	public static void parametroakOptimizatu(String arffPath, String modelPath) throws Exception {
 		
-		String errepresentazioa = "TFIDF";
+		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
 		BayesNetObject paramsOpt = BayesNetParamOpt.optimizatuParametroak(arffPath, errepresentazioa, bektoreMota);
 		
 		String[] aux = arffPath.split("/");
 		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		
 		FileWriter f = new FileWriter(direktorioa + "BayesNetParamsOpt.txt");
 		f.write(paramsOpt.toString());
 		f.close();

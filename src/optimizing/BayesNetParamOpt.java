@@ -48,12 +48,11 @@ public class BayesNetParamOpt {
 		BayesNet classifier = new BayesNet();
 		
 		double fMeasureOpt = -1.0;
-		BayesNetEstimator estimatorOpt = null;
 		double alphaOpt = -1.0;
 		int maxNrOfParentsOpt = -1;
 		
-		for (int i = 0; i < 6; i++) {	// MaxParents
-			for (double j = 0.0; j < 6.0; j=j+1.0) {	// Alpha
+		for (int i = 5; i < 11; i++) {	// MaxParents
+			for (double j = 0.1; j > 0.00001; j=j/10) {	// Alpha
 					
 				try {
 					estimator.setAlpha(j);
@@ -63,15 +62,14 @@ public class BayesNetParamOpt {
 					classifier.setSearchAlgorithm(searchAlgorithm);
 
 					// Aukerak
-//						double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
-					double fMeasureAvg = fCVAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
+					double fMeasureAvg = holdOutAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
+//					double fMeasureAvg = fCVAplikatu(dataSet, arffPath, errepresentazioa, bektoreMota, classifier);
 					
 					System.out.println("Estimator: " + estimator.getClass().getSimpleName() + " - searchAlgorithm: " + searchAlgorithm.getClass().getSimpleName() 
-							+ " - maxParents: " + i + " - alpha: " + j + " | fMeasureAvg => " + fMeasureAvg);
+							+ " - maxParents: " + i + " - alpha: " + j + " | fMeasure => " + fMeasureAvg);	// pctCorrect -> fMeasure
 					
 					if (fMeasureAvg > fMeasureOpt) {	// Klase minimoarekin -> Nan edo 0.0
 						fMeasureOpt = fMeasureAvg;
-						estimatorOpt = estimator;
 						alphaOpt = j;
 						maxNrOfParentsOpt = i;
 					}
@@ -88,7 +86,7 @@ public class BayesNetParamOpt {
 		System.out.println();
 		System.out.println("Hoberenaren emaitzak: " + fMeasureOpt+ " lortu duena" );
 		
-		paramsOpt = new BayesNetObject(estimatorOpt, searchAlgorithm, alphaOpt, maxNrOfParentsOpt, fMeasureOpt);
+		paramsOpt = new BayesNetObject(estimator, searchAlgorithm, alphaOpt, maxNrOfParentsOpt, fMeasureOpt);
 		
 		return paramsOpt;
 	}
@@ -108,7 +106,7 @@ public class BayesNetParamOpt {
 			}
 			klaseMinoritarioa = min_pos;
 		}
-		System.out.println("Klase minoritarioa => " + klaseMinoritarioa);
+//		System.out.println("Klase minoritarioa => " + klaseMinoritarioa);
 		return klaseMinoritarioa;
 	}
 
@@ -200,16 +198,18 @@ public class BayesNetParamOpt {
 			
 			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
 			
-//			int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
-			int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
+			int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
+//			int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
 			
 			
 			Evaluation evaluator = new Evaluation(train_BOW_FSS);
 			classifier.buildClassifier(train_BOW_FSS);
 			evaluator.evaluateModel(classifier, dev_BOW_FSS);
 			
-			System.out.println("	" + i + " bueltaren fMeasure: " + evaluator.fMeasure(klaseMax));
-			totala = totala + evaluator.fMeasure(klaseMax);
+//			System.out.println("	" + i + " bueltaren fMeasure: " + evaluator.fMeasure(klaseMax));
+			
+			totala = totala + evaluator.fMeasure(klaseMinoritarioa);
+//			totala = totala + evaluator.pctCorrect();
 		}
 		System.out.println("--------------");
 		emaitza = totala / iterazioKop;

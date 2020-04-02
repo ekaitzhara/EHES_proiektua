@@ -1,13 +1,12 @@
 package optimizing;
 
-import weka.classifiers.bayes.net.estimate.BayesNetEstimator;
-import weka.classifiers.bayes.net.search.SearchAlgorithm;
+import weka.classifiers.bayes.net.estimate.SimpleEstimator;
 import weka.classifiers.bayes.net.search.local.K2;
 
 public class BayesNetObject {
 	
 	// Parametroak
-	private BayesNetEstimator estimator;
+	private SimpleEstimator estimator;
 	private K2 searchAlgorithm;
 	private double alpha;
 	private int maxNrOfParents;
@@ -15,7 +14,7 @@ public class BayesNetObject {
 	private double fMeasure;
 	
 	
-	public BayesNetObject(BayesNetEstimator estimator, K2 searchAlgorithm, double alpha,
+	public BayesNetObject(SimpleEstimator estimator, K2 searchAlgorithm, double alpha,
 			int maxNrOfParents, double fMeasure) {
 		super();
 		this.estimator = estimator;
@@ -27,7 +26,7 @@ public class BayesNetObject {
 
 	
 
-	public BayesNetEstimator getEstimator() {
+	public SimpleEstimator getEstimator() {
 		return estimator;
 	}
 

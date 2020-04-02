@@ -11,6 +11,7 @@ import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.net.estimate.BMAEstimator;
 import weka.classifiers.bayes.net.estimate.SimpleEstimator;
+import weka.classifiers.bayes.net.search.local.K2;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -33,7 +34,7 @@ public class HoldOut100 {
 		double pctCorrect = 0.0;
 		double fMeasure = 0.0;
 		
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			
 			int seed = 1;
 			dataSet.randomize(new Random(seed));
@@ -67,7 +68,14 @@ public class HoldOut100 {
 //			int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 			
 			BayesNet classifier = new BayesNet();
-			classifier.setEstimator(new SimpleEstimator());
+			
+			SimpleEstimator estimator = new SimpleEstimator();
+			estimator.setAlpha(0.001);
+			classifier.setEstimator(estimator);
+			
+			K2 searchAlgorithm = new K2();
+			searchAlgorithm.setMaxNrOfParents(20);
+			classifier.setSearchAlgorithm(searchAlgorithm);
 			
 			Evaluation evaluator = new Evaluation(train_BOW_FSS);
 			classifier.buildClassifier(train_BOW_FSS);
@@ -83,8 +91,8 @@ public class HoldOut100 {
 			System.out.println(evaluator.toMatrixString());
 		}
 		
-		pctCorrect = pctCorrect / 100;
-		fMeasure = fMeasure / 100;
+		pctCorrect = pctCorrect / 10;
+		fMeasure = fMeasure / 10;
 		
 		System.out.println("pctCorrect: " + pctCorrect);
 		System.out.println("fMeasure: " + fMeasure);

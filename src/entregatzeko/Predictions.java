@@ -2,11 +2,15 @@ package entregatzeko;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.NumericTransform;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class Predictions {
 	
@@ -45,11 +49,15 @@ public class Predictions {
 		
 		BayesNet classifier = (BayesNet) SerializationHelper.read(modelPath);
 		
+		Instances dataSet_BoW = TransformRaw.transformRawInstances(dataSet, "BOW", "NonSparse", "test_unk_dictionary.txt");
 		
-		for (int i = 0; i < dataSet.numInstances(); i++) {
-			double predictedValue = classifier.classifyInstance(dataSet.instance(i));
-			String predicted = dataSet.classAttribute().value((int) predictedValue);
-			System.out.println(i + ".garren instantziaren estimazioa: " + predicted);
+		classifier.buildClassifier(dataSet_BoW);
+		
+		
+		for (int i = 0; i < dataSet_BoW.numInstances(); i++) {
+			double predictedValue = classifier.classifyInstance(dataSet_BoW.instance(i));
+			String predicted = dataSet_BoW.classAttribute().value((int) predictedValue);
+			System.out.println(i + ".garren instantziaren estimazioa: " + predicted + "		|  " + predictedValue);
 		}
 		
 	}

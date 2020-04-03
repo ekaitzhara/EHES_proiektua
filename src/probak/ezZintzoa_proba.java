@@ -3,6 +3,7 @@ package probak;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;
+import entregatzeko.FSS_MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
@@ -32,9 +33,15 @@ public class ezZintzoa_proba {
 		String direktorioa = arffPath.replace(aux[aux.length-1],"");
 		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
 		
+		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_FSS_dictionary.txt";
+		
 		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+		
+		System.out.println(train_BOW_FSS.numAttributes());
+		
+		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
 //		int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 		

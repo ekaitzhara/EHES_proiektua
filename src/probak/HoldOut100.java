@@ -16,6 +16,7 @@ import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
 public class HoldOut100 {
@@ -33,6 +34,10 @@ public class HoldOut100 {
 		
 		double pctCorrect = 0.0;
 		double fMeasure = 0.0;
+		
+		long startTime = System.currentTimeMillis();
+		Runtime rt = Runtime.getRuntime();
+		long startMemory = (rt.totalMemory()-rt.freeMemory()) / (1024 * 1024);
 		
 		for (int i = 0; i < 10; i++) {
 			
@@ -57,25 +62,25 @@ public class HoldOut100 {
 			
 			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
 			
-			Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
-			
 			Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 			
-			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+			String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
 			
+			FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
+			
+			Instances dev_BOW_FSS = FSS_MakeCompatible.makeFSSCompatibleInstances(dev, dictionaryFSSPath);
 			
 			int klaseMinoritarioa = NaiveBayesHoldOut.klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
-//			int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 			
 			BayesNet classifier = new BayesNet();
 			
-			SimpleEstimator estimator = new SimpleEstimator();
-			estimator.setAlpha(0.001);
-			classifier.setEstimator(estimator);
-			
-			K2 searchAlgorithm = new K2();
-			searchAlgorithm.setMaxNrOfParents(20);
-			classifier.setSearchAlgorithm(searchAlgorithm);
+//			SimpleEstimator estimator = new SimpleEstimator();
+//			estimator.setAlpha(0.001);
+//			classifier.setEstimator(estimator);
+//			
+//			K2 searchAlgorithm = new K2();
+//			searchAlgorithm.setMaxNrOfParents(20);
+//			classifier.setSearchAlgorithm(searchAlgorithm);
 			
 			Evaluation evaluator = new Evaluation(train_BOW_FSS);
 			classifier.buildClassifier(train_BOW_FSS);
@@ -94,8 +99,14 @@ public class HoldOut100 {
 		pctCorrect = pctCorrect / 10;
 		fMeasure = fMeasure / 10;
 		
+		long holdOut_time = (System.currentTimeMillis()-startTime)/1000;
+		rt = Runtime.getRuntime();
+		long finalMemory = (rt.totalMemory()-rt.freeMemory()) / (1024 * 1024);
+		
 		System.out.println("pctCorrect: " + pctCorrect);
 		System.out.println("fMeasure: " + fMeasure);
+		System.out.println("\nHold-out Denbora: " + holdOut_time + " seg");
+		System.out.println("Used memory: " + (finalMemory - startMemory) + " MB");
 	}
 
 }

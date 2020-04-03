@@ -1,12 +1,17 @@
 package entregatzeko;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Enumeration;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.Remove;
 
 public class FSS_MakeCompatible {
@@ -124,6 +129,34 @@ public class FSS_MakeCompatible {
 		changed.setRelationName(relationName + "_makeCompatibleFSS");
 		
 		return changed;
+	}
+	
+	public static Instances makeFSSCompatibleInstances(Instances toChange, String dictionaryPath) throws Exception {
+		
+		if (toChange.classIndex() == -1)
+			toChange.setClassIndex(toChange.numAttributes()-1);
+		
+		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
+		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
+		fixedDictionary.setInputFormat(toChange);
+		toChange = Filter.useFilter(toChange, fixedDictionary);
+//		toChange.setClassIndex(0);
+		
+		toChange.setRelationName("dev_FSS_compatible");
+		return toChange;
+		
+	}
+	
+	public static void gordeHiztegia(Instances dataSet, String dictionaryPath) throws IOException {
+		
+		FileWriter f = new FileWriter(dictionaryPath);
+		Enumeration<Attribute> allAttributes = dataSet.enumerateAttributes();
+		
+		while (allAttributes.hasMoreElements())
+			f.write(allAttributes.nextElement().name() + ",1\n");
+		
+		f.close();
+		
 	}
 
 }

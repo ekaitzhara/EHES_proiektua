@@ -119,7 +119,7 @@ public class GetRaw {
         	Add addNominal = new Add();
         	addNominal.setAttributeIndex("last");
         	addNominal.setAttributeName("klasea");
-        	addNominal.setNominalLabels("DESC,ENTY,ABBR,HUM,NUM,LOC");
+        	addNominal.setNominalLabels("NUM,LOC,HUM,DESC,ENTY,ABBR");
         	addNominal.setInputFormat(data);
         	data = Filter.useFilter(data, addNominal);
         }

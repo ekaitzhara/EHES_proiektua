@@ -3,6 +3,7 @@ package probak;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;
+import entregatzeko.FSS_MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
@@ -19,7 +20,9 @@ public class fCV_proba {
 	
 	public static void main(String[] args) throws Exception {
 
-		long startTime = System.nanoTime();
+		long startTime = System.currentTimeMillis();
+		Runtime rt = Runtime.getRuntime();
+		long startMemory = (rt.totalMemory()-rt.freeMemory()) / (1024 * 1024);
 		
 		String arffPath = args[0];
 		DataSource source = new DataSource(arffPath);
@@ -40,15 +43,17 @@ public class fCV_proba {
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
-//		int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
+		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
 		
-		SimpleEstimator estimator = new SimpleEstimator();
-		estimator.setAlpha(0.1);
-		classifier.setEstimator(estimator);
+		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
-		K2 searchAlgorithm = new K2();
-		searchAlgorithm.setMaxNrOfParents(9);
-		classifier.setSearchAlgorithm(searchAlgorithm);
+//		SimpleEstimator estimator = new SimpleEstimator();
+//		estimator.setAlpha(0.1);
+//		classifier.setEstimator(estimator);
+//		
+//		K2 searchAlgorithm = new K2();
+//		searchAlgorithm.setMaxNrOfParents(9);
+//		classifier.setSearchAlgorithm(searchAlgorithm);
 		
 		Evaluation evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);
@@ -65,9 +70,12 @@ public class fCV_proba {
 		System.out.println(evaluator.toMatrixString());
 		
 		
-		long fCV_time = (System.nanoTime()-startTime)/1000000000;
-		System.out.println("\nfCV Denbora: " + fCV_time + " seg");
+		long fCV_time = (System.currentTimeMillis()-startTime)/1000;
+		rt = Runtime.getRuntime();
+		long finalMemory = (rt.totalMemory()-rt.freeMemory()) / (1024 * 1024);
 		
+		System.out.println("\nfCV Denbora: " + fCV_time + " seg");
+		System.out.println("Used memory: " + (finalMemory - startMemory) + " MB");
 	}
 
 }

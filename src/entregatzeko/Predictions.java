@@ -1,15 +1,19 @@
 package entregatzeko;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Enumeration;
+
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.meta.FilteredClassifier;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.NumericToNominal;
-import weka.filters.unsupervised.attribute.NumericTransform;
+import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class Predictions {
@@ -37,10 +41,12 @@ public class Predictions {
 			System.exit(0);
 		}
 		
-		sailkatuDatuak(args[0], args[1]);
+//		sailkatuDatuak(args[0], args[1], args[2]);
+		compareResults(args[0], args[1], args[2], args[3]);
+		
 	}
 	
-	public static void sailkatuDatuak(String arffPath, String modelPath) throws Exception {
+	public static void sailkatuDatuak(String arffPath, String modelPath, String dictionaryPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
@@ -49,16 +55,76 @@ public class Predictions {
 		
 		BayesNet classifier = (BayesNet) SerializationHelper.read(modelPath);
 		
-		Instances dataSet_BoW = TransformRaw.transformRawInstances(dataSet, "BOW", "NonSparse", "test_unk_dictionary.txt");
+		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
+		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
+		fixedDictionary.setInputFormat(dataSet);
+		dataSet = Filter.useFilter(dataSet, fixedDictionary);
+		dataSet.setClassIndex(0);
 		
-		classifier.buildClassifier(dataSet_BoW);
+		System.out.println(dataSet.numAttributes());
+		System.out.println(dataSet.firstInstance());
 		
+		String[] aux = modelPath.split("/");
+		String direktorioa = modelPath.replace(aux[aux.length-1],"");
+		String predictionsPath = direktorioa + "/allPredictions.txt";
+		FileWriter f = new FileWriter(predictionsPath);
 		
-		for (int i = 0; i < dataSet_BoW.numInstances(); i++) {
-			double predictedValue = classifier.classifyInstance(dataSet_BoW.instance(i));
-			String predicted = dataSet_BoW.classAttribute().value((int) predictedValue);
-			System.out.println(i + ".garren instantziaren estimazioa: " + predicted + "		|  " + predictedValue);
+		for (int i = 0; i < dataSet.numInstances(); i++) {
+			double predictedValue = classifier.classifyInstance(dataSet.instance(i));
+			String predicted = dataSet.classAttribute().value((int) predictedValue);
+			System.out.println(i + ".garren instantziaren estimazioa: " + predicted);
+			f.write(i + ".garren instantziaren estimazioa: " + predicted + "\n");
 		}
+		
+		f.close();
+		
+	}
+	
+	public static void compareResults(String arffPath, String realAffPath, String modelPath, String dictionaryPath) throws Exception {
+		
+		DataSource source = new DataSource(arffPath);
+		Instances dataSet = source.getDataSet();
+		if (dataSet.classIndex() == -1)
+			dataSet.setClassIndex(dataSet.numAttributes()-1);
+		
+		DataSource sourceReal = new DataSource(realAffPath);
+		Instances test = sourceReal.getDataSet();
+		if (test.classIndex() == -1)
+			test.setClassIndex(test.numAttributes()-1);
+		
+		BayesNet classifier = (BayesNet) SerializationHelper.read(modelPath);
+		
+		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
+		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
+		fixedDictionary.setInputFormat(dataSet);
+		dataSet = Filter.useFilter(dataSet, fixedDictionary);
+		dataSet.setClassIndex(0);
+		
+		int guztiak = dataSet.numInstances();
+		int asmatutakoak = 0;
+		
+		System.out.println("inst#	actual	predicted	error");
+		System.out.println("-----	------	---------	-----");
+		
+		for (int i = 0; i < dataSet.numInstances(); i++) {
+			double predictedValue = classifier.classifyInstance(dataSet.instance(i));
+			String predicted = dataSet.classAttribute().value((int) predictedValue);
+			String actual = test.classAttribute().value((int) test.instance(i).classValue());
+			
+			System.out.print(i + "	" + actual + "	" + predicted);
+			if (!actual.equals(predicted))
+				System.out.print("	+\n");
+			else {
+				asmatutakoak++;
+				System.out.print("\n");
+			}
+		}
+
+		System.out.println("-----------------------------");
+		System.out.println("Asmatutakoak: " + asmatutakoak);
+		double precision = (double) asmatutakoak/guztiak;
+
+		System.out.println("Precision: " + precision);
 		
 	}
 

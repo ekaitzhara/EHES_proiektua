@@ -60,22 +60,7 @@ public class GetBaselineModel {
 		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
-		int seed = 1;
-		dataSet.randomize(new Random(seed));
-		RemovePercentage removePercentage = new RemovePercentage();
-		
-		// Train zatia lortzeko
-		removePercentage.setInputFormat(dataSet);
-		removePercentage.setPercentage(70);
-		removePercentage.setInvertSelection(true);	// %70-a lortzeko
-		Instances train = Filter.useFilter(dataSet, removePercentage);
-		
-		// Dev zatia lortzeko
-		removePercentage.setInputFormat(dataSet);
-		removePercentage.setInvertSelection(false);
-		Instances dev = Filter.useFilter(dataSet, removePercentage);
-		
-		Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota);
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
@@ -85,11 +70,9 @@ public class GetBaselineModel {
 		
 		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
-		Instances dev_BOW_FSS = FSS_MakeCompatible.makeFSSCompatibleInstances(dev, dictionaryFSSPath);
-		
 		evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);
-		evaluator.evaluateModel(classifier, dev_BOW_FSS);
+		evaluator.evaluateModel(classifier, train_BOW_FSS);
 		
 		// Model karpeta ez badago sortuta
 		String[] auxModel = modelPath.split("/");

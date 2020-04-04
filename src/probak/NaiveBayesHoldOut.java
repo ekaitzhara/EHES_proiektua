@@ -67,15 +67,13 @@ public class NaiveBayesHoldOut {
 		
 		String[] aux = arffPath.split("/");
 		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
+		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
 		
-		Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
-		
-		Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
-		
+		Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota);
+				
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
-		Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+		Instances dev_BOW_FSS = FSS_MakeCompatible.makeFSSCompatibleInstances(dev, dictionaryFSSPath);
 		
 		int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
 		

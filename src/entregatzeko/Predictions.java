@@ -113,7 +113,7 @@ public class Predictions {
 			
 			System.out.print(i + "	" + actual + "	" + predicted);
 			if (!actual.equals(predicted))
-				System.out.print("	+\n");
+				System.out.print("		+\n");
 			else {
 				asmatutakoak++;
 				System.out.print("\n");

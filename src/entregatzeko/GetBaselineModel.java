@@ -75,17 +75,17 @@ public class GetBaselineModel {
 		removePercentage.setInvertSelection(false);
 		Instances dev = Filter.useFilter(dataSet, removePercentage);
 		
-		String[] aux = arffPath.split("/");
-		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
-		
-		Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
-		
-		Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
+		Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
-		Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
+		
+		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
+		
+		Instances dev_BOW_FSS = FSS_MakeCompatible.makeFSSCompatibleInstances(dev, dictionaryFSSPath);
 		
 		evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);

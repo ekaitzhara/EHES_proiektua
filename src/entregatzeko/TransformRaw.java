@@ -107,7 +107,7 @@ public class TransformRaw {
 		
 	}
 	
-	public static Instances transformRawInstances(Instances dataSet, String errepresentazioa, String bektoreMota, String dictionaryPath) throws Exception {
+	public static Instances transformRawInstances(Instances dataSet, String errepresentazioa, String bektoreMota) throws Exception {
 		Integer hiztegiZabalera = Integer.MAX_VALUE;
 		
 		StringToWordVector stwv = new StringToWordVector();
@@ -125,10 +125,6 @@ public class TransformRaw {
 			stwv.setTFTransform(false);
 		}
 		stwv.setInputFormat(dataSet);
-		
-		// Gorde dictionary
-		stwv.setDictionaryFileToSaveTo(new File(dictionaryPath));
-		stwv.setPeriodicPruning(100.0);
 		
 		dataSet = Filter.useFilter(dataSet, stwv);
 		dataSet.setClassIndex(0);

@@ -129,13 +129,15 @@ public class BayesNetParamOpt {
 		searchAlg.setMaxNrOfParents(paramsOpt.getMaxNrOfParents());
 		classifier.setSearchAlgorithm(searchAlg);
 		
-		String[] aux = arffPath.split("/");
-		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
-		
-		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+		
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
+		
+		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
 		classifier.buildClassifier(train_BOW_FSS);
 		evaluator.evaluateModel(classifier, train_BOW_FSS);
@@ -186,21 +188,19 @@ public class BayesNetParamOpt {
 			removePercentage.setInvertSelection(false);
 			Instances dev = Filter.useFilter(dataSet, removePercentage);
 			
-			String[] aux = arffPath.split("/");
-			String direktorioa = arffPath.replace(aux[aux.length-1],"");
-			String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
-			
-			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
-			
-			Instances dev_BOW = MakeCompatible.makeCompatibleInstances(dev, dictionaryPath);
+			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota);
 			
 			Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 			
-			Instances dev_BOW_FSS = FSS_MakeCompatible.make2InstancesCompatibles(train_BOW_FSS, dev_BOW);
+			String[] aux = arffPath.split("/");
+			String direktorioa = arffPath.replace(aux[aux.length-1],"");
+			String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
 			
-			int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
-//			int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
+			FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 			
+			Instances dev_BOW_FSS = FSS_MakeCompatible.makeFSSCompatibleInstances(dev, dictionaryFSSPath);
+			
+			int klaseMinoritarioa = klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA			
 			
 			Evaluation evaluator = new Evaluation(train_BOW_FSS);
 			classifier.buildClassifier(train_BOW_FSS);
@@ -209,22 +209,26 @@ public class BayesNetParamOpt {
 //			System.out.println("	" + i + " bueltaren fMeasure: " + evaluator.fMeasure(klaseMax));
 			
 			totala = totala + evaluator.fMeasure(klaseMinoritarioa);
-//			totala = totala + evaluator.pctCorrect();
+
 		}
-		System.out.println("--------------");
+//		System.out.println("--------------");
 		emaitza = totala / iterazioKop;
 		return emaitza;
 	}
 	
 	private static double fCVAplikatu(Instances dataSet, String arffPath, String errepresentazioa, String bektoreMota, BayesNet classifier) throws Exception {
 		
-		String[] aux = arffPath.split("/");
-		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
 		
-		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
+		
+
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
+		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
+		
+		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
 		int klaseMax = Utils.maxIndex(train_BOW_FSS.attributeStats(train_BOW_FSS.classIndex()).nominalCounts);
 		

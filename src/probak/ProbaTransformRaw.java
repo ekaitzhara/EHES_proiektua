@@ -21,9 +21,8 @@ public class ProbaTransformRaw {
 		
 		String[] aux = arffPath.split("/");
 		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
 		
-		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
 		System.out.println(train_BOW.numAttributes());
 		System.out.println(train_BOW.firstInstance());

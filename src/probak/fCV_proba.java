@@ -35,14 +35,12 @@ public class fCV_proba {
 		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
-		String[] aux = arffPath.split("/");
-		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
-		
-		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
+		String[] aux = arffPath.split("/");
+		String direktorioa = arffPath.replace(aux[aux.length-1],"");
 		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
 		
 		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);

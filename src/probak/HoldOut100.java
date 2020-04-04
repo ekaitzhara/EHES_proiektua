@@ -9,9 +9,12 @@ import entregatzeko.MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.bayes.net.estimate.BMAEstimator;
 import weka.classifiers.bayes.net.estimate.SimpleEstimator;
+import weka.classifiers.bayes.net.search.global.HillClimber;
 import weka.classifiers.bayes.net.search.local.K2;
+import weka.classifiers.meta.Bagging;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -56,14 +59,12 @@ public class HoldOut100 {
 			removePercentage.setInvertSelection(false);
 			Instances dev = Filter.useFilter(dataSet, removePercentage);
 			
-			String[] aux = arffPath.split("/");
-			String direktorioa = arffPath.replace(aux[aux.length-1],"");
-			String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
-			
-			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota, dictionaryPath);
+			Instances train_BOW = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota);
 			
 			Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 			
+			String[] aux = arffPath.split("/");
+			String direktorioa = arffPath.replace(aux[aux.length-1],"");
 			String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa+ "_FSS_dictionary.txt";
 			
 			FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);

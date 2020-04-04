@@ -31,11 +31,10 @@ public class ezZintzoa_proba {
 		
 		String[] aux = arffPath.split("/");
 		String direktorioa = arffPath.replace(aux[aux.length-1],"");
-		String dictionaryPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt";
 		
 		String dictionaryFSSPath = direktorioa + "/train_" + errepresentazioa + "_" + bektoreMota + "_FSS_dictionary.txt";
 		
-		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota, dictionaryPath);
+		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		

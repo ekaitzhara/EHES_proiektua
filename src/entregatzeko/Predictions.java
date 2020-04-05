@@ -93,8 +93,15 @@ public class Predictions {
 		int guztiak = dataSet.numInstances();
 		int asmatutakoak = 0;
 		
+		String[] aux = modelPath.split("/");
+		String direktorioa = modelPath.replace(aux[aux.length-1],"");
+		String predictionsPath = direktorioa + "/allPredictions.txt";
+		FileWriter f = new FileWriter(predictionsPath);
+		
 		System.out.println("inst#	actual	predicted	error");
 		System.out.println("-----	------	---------	-----");
+		f.write("inst#	actual	predicted	error\n");
+		f.write("-----	------	---------	-----\n");
 		
 		for (int i = 0; i < dataSet.numInstances(); i++) {
 			double predictedValue = classifier.classifyInstance(dataSet.instance(i));
@@ -102,11 +109,14 @@ public class Predictions {
 			String actual = test.classAttribute().value((int) test.instance(i).classValue());
 			
 			System.out.print(i + "	" + actual + "	" + predicted);
-			if (!actual.equals(predicted))
+			f.write(i + "	" + actual + "	" + predicted);
+			if (!actual.equals(predicted)) {
 				System.out.print("		+\n");
-			else {
+				f.write("		+\n");
+			} else {
 				asmatutakoak++;
 				System.out.print("\n");
+				f.write("\n");
 			}
 		}
 
@@ -116,6 +126,11 @@ public class Predictions {
 
 		System.out.println("Precision: " + precision);
 		
+		f.write("\n-----------------------------");
+		f.write("\nAsmatutakoak: " + asmatutakoak);
+		f.write("\nPrecision: " + precision);
+		
+		f.close();
 	}
 
 }

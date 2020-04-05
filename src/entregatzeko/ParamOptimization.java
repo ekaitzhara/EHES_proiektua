@@ -31,7 +31,7 @@ public class ParamOptimization {
 			System.out.println("	1 -> Entrenamendu eta ebaluazioa burutzeko datuen arff-a");
 			System.out.println("	2 -> Non gorde nahi duzun modelo optimoaren path-a");
 			System.out.println("Adibide hau jarraitu:\n");
-			System.out.println("		java -jar paramOptimization.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/workdir/Model/adibideOpt.model\n");
+			System.out.println("		java -jar ParamOptimization.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/workdir/Model/adibideOpt.model\n");
 			
 			System.exit(0);
 		}
@@ -41,6 +41,7 @@ public class ParamOptimization {
 
 	public static void parametroakOptimizatu(String arffPath, String modelPath) throws Exception {
 		
+		// Erabakitako aukerak
 		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		

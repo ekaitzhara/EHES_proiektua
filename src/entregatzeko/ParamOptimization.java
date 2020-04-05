@@ -4,10 +4,6 @@ import java.io.FileWriter;
 
 import optimizing.BayesNetObject;
 import optimizing.BayesNetParamOpt;
-import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.BayesNet;
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 
 public class ParamOptimization {
 	

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
@@ -15,7 +14,6 @@ import weka.filters.unsupervised.attribute.NominalToString;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.RenameAttribute;
-import weka.filters.unsupervised.attribute.RenameNominalValues;
 
 public class GetRaw {
 

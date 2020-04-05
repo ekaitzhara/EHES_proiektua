@@ -1,26 +1,15 @@
 package probak;
 
-import java.io.FileWriter;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;
 import entregatzeko.FSS_MakeCompatible;
-import entregatzeko.MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.bayes.net.estimate.BMAEstimator;
-import weka.classifiers.bayes.net.estimate.SimpleEstimator;
-import weka.classifiers.bayes.net.search.global.HillClimber;
-import weka.classifiers.bayes.net.search.local.K2;
-import weka.classifiers.meta.Bagging;
 import weka.core.Instances;
-import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.Reorder;
-import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
 public class HoldOut100 {

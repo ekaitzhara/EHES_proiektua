@@ -1,6 +1,5 @@
 package itxarondakoKalitatea;
 
-import java.io.FileWriter;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;

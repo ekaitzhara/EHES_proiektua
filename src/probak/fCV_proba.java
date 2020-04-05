@@ -7,13 +7,7 @@ import entregatzeko.FSS_MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.bayes.net.estimate.BMAEstimator;
-import weka.classifiers.bayes.net.estimate.BayesNetEstimator;
-import weka.classifiers.bayes.net.estimate.MultiNomialBMAEstimator;
-import weka.classifiers.bayes.net.estimate.SimpleEstimator;
-import weka.classifiers.bayes.net.search.local.K2;
 import weka.core.Instances;
-import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class fCV_proba {

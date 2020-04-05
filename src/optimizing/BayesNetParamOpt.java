@@ -2,33 +2,20 @@ package optimizing;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;
 import entregatzeko.FSS_MakeCompatible;
-import entregatzeko.MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.bayes.net.estimate.BMAEstimator;
 import weka.classifiers.bayes.net.estimate.BayesNetEstimator;
-import weka.classifiers.bayes.net.estimate.MultiNomialBMAEstimator;
 import weka.classifiers.bayes.net.estimate.SimpleEstimator;
-import weka.classifiers.bayes.net.search.SearchAlgorithm;
-import weka.classifiers.bayes.net.search.local.HillClimber;
 import weka.classifiers.bayes.net.search.local.K2;
-import weka.classifiers.bayes.net.search.local.LAGDHillClimber;
-import weka.classifiers.bayes.net.search.local.RepeatedHillClimber;
-import weka.classifiers.bayes.net.search.local.SimulatedAnnealing;
-import weka.classifiers.bayes.net.search.local.TAN;
-import weka.classifiers.bayes.net.search.local.TabuSearch;
 import weka.core.Instances;
-import weka.core.SelectedTag;
 import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
-import weka.estimators.Estimator;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.RemovePercentage;
 

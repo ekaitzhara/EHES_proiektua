@@ -2,19 +2,13 @@ package entregatzeko;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Enumeration;
 
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
-import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class Predictions {
 	

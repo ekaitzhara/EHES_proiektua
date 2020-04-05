@@ -2,7 +2,6 @@ package entregatzeko;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Random;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
@@ -10,8 +9,6 @@ import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
-import weka.filters.Filter;
-import weka.filters.unsupervised.instance.RemovePercentage;
 
 public class GetBaselineModel {
 

@@ -1,7 +1,5 @@
 package probak;
 
-import java.util.Random;
-
 import entregatzeko.FSS_InfoGain;
 import entregatzeko.FSS_MakeCompatible;
 import entregatzeko.TransformRaw;

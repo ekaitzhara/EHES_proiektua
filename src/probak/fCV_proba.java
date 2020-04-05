@@ -7,6 +7,8 @@ import entregatzeko.FSS_MakeCompatible;
 import entregatzeko.TransformRaw;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.net.estimate.SimpleEstimator;
+import weka.classifiers.bayes.net.search.local.K2;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
@@ -39,18 +41,18 @@ public class fCV_proba {
 		
 		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
-//		SimpleEstimator estimator = new SimpleEstimator();
-//		estimator.setAlpha(0);
-//		classifier.setEstimator(estimator);
-//		
-//		K2 searchAlgorithm = new K2();
-//		searchAlgorithm.setMaxNrOfParents(9);
-//		classifier.setSearchAlgorithm(searchAlgorithm);
+		SimpleEstimator estimator = new SimpleEstimator();
+		estimator.setAlpha(0.1);
+		classifier.setEstimator(estimator);
+		
+		K2 searchAlgorithm = new K2();
+		searchAlgorithm.setMaxNrOfParents(4);
+		classifier.setSearchAlgorithm(searchAlgorithm);
 		
 		Evaluation evaluator = new Evaluation(train_BOW_FSS);
 		classifier.buildClassifier(train_BOW_FSS);
 		
-		evaluator.crossValidateModel(classifier, train_BOW_FSS, 10, new Random(1));
+		evaluator.crossValidateModel(classifier, train_BOW_FSS, 2, new Random(1));
 		
 		int klaseMinoritarioa = NaiveBayesHoldOut.klaseMinoritarioaLortu(dataSet);
 		

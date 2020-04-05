@@ -14,7 +14,7 @@ public class Predictions {
 	
 	public static void main(String[] args) throws Exception {
 		
-//		GetRaw.disableWarning();
+		GetRaw.disableWarning();
 		
 		if(args.length == 0) {
 			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");

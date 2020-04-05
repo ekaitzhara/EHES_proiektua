@@ -81,13 +81,10 @@ public class TransformRaw {
 		
 		// Gorde dictionary
 		stwv.setDictionaryFileToSaveTo(new File(direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));
-//		stwv.setPeriodicPruning(100.0);
 		
 		stwv.setInputFormat(train);
 		train = Filter.useFilter(train, stwv);
 		train.setClassIndex(0);
-//		System.out.println(train.numAttributes());
-		System.out.println("2 -> " + train.firstInstance());
 		
 		if ("Sparse".equals(bektoreMota)) { 
 			// NonSparsetik Sparsera 
@@ -100,8 +97,6 @@ public class TransformRaw {
 		FileWriter f = new FileWriter(newArff);
 		f.write(train.toString());
 		f.close();
-		
-		System.out.println(train.numAttributes());
 		
 		System.out.println("Train " + errepresentazioa + " eta " + bektoreMota + " gordeta hemen: " + newArff);
 		

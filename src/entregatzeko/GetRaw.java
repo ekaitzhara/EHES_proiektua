@@ -212,6 +212,7 @@ public class GetRaw {
 		
         data.setRelationName(relationName);
         System.out.println(pathToData + " fitxategitik Instances objektua lortuta.");
+        
         return data;
 	}
 	

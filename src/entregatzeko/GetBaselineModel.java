@@ -11,11 +11,6 @@ import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class GetBaselineModel {
-
-	// PROZEDURA:	
-	// raw arff -> train,dev -> train_BOW_9999 (StringToWordVector) -> dictionary_9999 ->
-	// -> dev_BOW_9999 (compatible) -> train_BOW_1000 (FSS) -> dev_BOW_1000 (FSS compatible) ->
-	// -> bateragarriak -> NaiveBayes
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -50,6 +45,7 @@ public class GetBaselineModel {
 		if (dataSet.classIndex() == -1)
 			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
+		// Baseline-a gure kasuan NaiveBayes da
 		NaiveBayes classifier = new NaiveBayes();
 		Evaluation evaluator = null;
 		
@@ -57,8 +53,10 @@ public class GetBaselineModel {
 		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
+		// Errepresentaziodun instantziak lortu
 		Instances train_BOW = TransformRaw.transformRawInstances(dataSet, errepresentazioa, bektoreMota);
 		
+		// Atributu hautapena bete, horiek murrizteko
 		Instances train_BOW_FSS = FSS_InfoGain.atributuenHautapenaInstances(train_BOW);
 		
 		String[] aux = arffPath.split("/");
@@ -78,6 +76,7 @@ public class GetBaselineModel {
         if (!modelDirectory.exists())
         	modelDirectory.mkdir();
 		
+        // Modeloa gorde
 		SerializationHelper.write(modelPath, classifier);
 		System.out.println(modelPath + " modeloa gordeta");
         
@@ -87,6 +86,9 @@ public class GetBaselineModel {
 		f.write("\n" + evaluator.toMatrixString());
 		f.close();
 		
+		System.out.println("\n######################");
+		System.out.println("ESTIMATUTAKO KALITATEA");
+		System.out.println("######################");
 		System.out.println(evaluator.toSummaryString("\n=== SUMMARY ===", false));
 		System.out.println(evaluator.toClassDetailsString());
 		System.out.println(evaluator.toMatrixString());
@@ -95,6 +97,7 @@ public class GetBaselineModel {
 	
 	
 	public static int klaseMinoritarioaLortu(Instances dataSet) {
+		
 		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
 		if (klaseMinoritarioa == 0) {
 			int[] classCounts = dataSet.attributeStats(dataSet.classIndex()).nominalCounts;

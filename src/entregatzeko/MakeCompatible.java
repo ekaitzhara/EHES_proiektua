@@ -42,6 +42,8 @@ public class MakeCompatible {
 	
 	public static void makeCompatibleArffFile(String goodArff, String arffToChange) throws Exception {
 		
+		
+		// Argumentuetatik datuak gorde
 		String[] aux1 = goodArff.split("/");
 		String directory = goodArff.replace(aux1[aux1.length-1], "");
 		
@@ -49,9 +51,11 @@ public class MakeCompatible {
 		aux1 = arffToChange.split("/");
 		String changeName = aux1[aux1.length-1].split("\\.")[0];
 		
-		String newArff = directory + changeName + goodArff.replace(goodName, "");
-		System.out.println(newArff);
+		System.out.println(changeName + " fitxategia " + goodName + " fitxategiaren bateragarria egiten...");
 		
+		String newArff = directory + changeName + goodArff.replace(goodName, "");
+		
+		// Lehenik TransformRaw.jar aplikatu denez, kokaleku berdinean egongo da hiztegia
 		String dictionaryPath = goodArff.split("\\.")[0] + "_dictionary.txt";
 		
 		DataSource sourceToChange = new DataSource(arffToChange);
@@ -59,18 +63,18 @@ public class MakeCompatible {
 		if (toChange.classIndex() == -1)
 			toChange.setClassIndex(toChange.numAttributes() - 1);
 		
+		// Hiztegia erabiliz egingo ditugu bateragarriak
 		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
 		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
 		fixedDictionary.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, fixedDictionary);
-		
 		
 		toChange.setRelationName(changeName + goodArff.replace(goodName, "").split("\\.")[0]);
 		FileWriter f = new FileWriter(newArff);
 		f.write(toChange.toString());
 		f.close();
 		
-		System.out.println("Arff berria gordeta hemen: " + newArff);
+		System.out.println("Fitxategi bateragarria gordeta hemen: " + newArff);
 		
 	}
 	
@@ -78,15 +82,14 @@ public class MakeCompatible {
 		if (toChange.classIndex() == -1)
 			toChange.setClassIndex(toChange.numAttributes() - 1);
 		
+		String relationName = toChange.relationName();
+		
 		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
 		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
 		fixedDictionary.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, fixedDictionary);
 		
-		toChange.setRelationName("dev_transformRaw_compatible");
-		FileWriter f = new FileWriter("/home/ekaitzhara/Documentos/dev_fss.arff");
-		f.write(toChange.toString());
-		f.close();
+		toChange.setRelationName(relationName + "_compatible");
 		
 		return toChange;
 	}

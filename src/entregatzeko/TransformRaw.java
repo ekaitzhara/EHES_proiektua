@@ -68,6 +68,8 @@ public class TransformRaw {
 		
 		System.out.println(fileName + " fitxategia erabakitako aukerekin gordeta hemen: "
 				+ "\n	" + newArff);
+		System.out.println("eta bere hiztegia hemen sortu egin da:"
+				+ "\n	" + direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt");
 		
 	}
 	

@@ -41,15 +41,14 @@ public class Predictions {
 			System.exit(0);
 		}
 		
-//		sailkatuDatuak(args[0], args[1], args[2]);
-		compareResults(args[0], args[1], args[2], args[3]);
+		sailkatuDatuak(args[0], args[1], args[2]);
+//		compareResults(args[0], args[1], args[2], args[3]);
 		
 	}
 	
-	public static void sailkatuDatuak(String arffPath, String modelPath, String dictionaryPath) throws Exception {
+	public static void sailkatuDatuak(String csvPath, String modelPath, String dictionaryPath) throws Exception {
 		
-		DataSource source = new DataSource(arffPath);
-		Instances dataSet = source.getDataSet();
+		Instances dataSet = GetRaw.datuGordinetikInstances(csvPath);
 		if (dataSet.classIndex() == -1)
 			dataSet.setClassIndex(dataSet.numAttributes()-1);
 		
@@ -60,9 +59,6 @@ public class Predictions {
 		fixedDictionary.setInputFormat(dataSet);
 		dataSet = Filter.useFilter(dataSet, fixedDictionary);
 		dataSet.setClassIndex(0);
-		
-		System.out.println(dataSet.numAttributes());
-		System.out.println(dataSet.firstInstance());
 		
 		String[] aux = modelPath.split("/");
 		String direktorioa = modelPath.replace(aux[aux.length-1],"");

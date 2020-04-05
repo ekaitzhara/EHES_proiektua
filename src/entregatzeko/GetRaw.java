@@ -139,6 +139,84 @@ public class GetRaw {
 			        
 	}
 	
+	public static Instances datuGordinetikInstances(String pathToData) throws Exception {
+		
+		
+		String dataName = pathToData.split("\\.")[0];
+		String fileType = pathToData.split("\\.")[1];
+		String pathFileAux = dataName + "2." + fileType;
+		
+		System.out.println(pathToData + " fitxategia irakurtzen...");
+		
+		// Arazoak ematen dituzten karaktereak kendu
+		FileWriter fw = new FileWriter(pathFileAux);
+        BufferedReader br = new BufferedReader(new FileReader(pathToData)); 
+        String line;
+        while((line = br.readLine()) != null) {
+            line = line.replace("'","`");
+            fw.write(line + "\n");
+        }
+        fw.close();
+
+        Instances data = null;
+        // Gure datuak csv moduan daude
+        if ("csv".equals(fileType)) {
+		    // load CSV
+		    CSVLoader loader = new CSVLoader();
+		    loader.setSource(new File(pathFileAux));
+		    data = loader.getDataSet();
+        }
+        
+        String relationName = data.relationName().substring(0, data.relationName().length()-1);
+        
+        Remove r = new Remove();
+	    int[] indice = {0};
+	    r.setAttributeIndicesArray(indice);
+	    r.setInvertSelection(false);
+	    r.setInputFormat(data);
+	    data = Filter.useFilter(data, r);
+	    
+	    NominalToString filterString = new NominalToString();
+		filterString.setAttributeIndexes("first");
+		filterString.setInputFormat(data);
+		data = Filter.useFilter(data, filterString);
+		
+        if(data.classIndex() == -1)
+        	data.setClassIndex(data.numAttributes() - 1);
+        
+        RenameAttribute rename = new RenameAttribute();
+        rename.setAttributeIndices("last");
+        rename.setReplace("klasea");
+        rename.setInputFormat(data);
+        data = Filter.useFilter(data, rename);
+        
+        if (data.numClasses() == 1) {
+        	NumericToNominal numToNom = new NumericToNominal();
+        	numToNom.setAttributeIndices("last");
+        	numToNom.setInputFormat(data);
+        	data = Filter.useFilter(data, numToNom);
+        	
+        	Remove remove = new Remove();
+        	remove.setAttributeIndices("last");
+        	remove.setInputFormat(data);
+        	data = Filter.useFilter(data, remove);
+        	
+        	Add addNominal = new Add();
+        	addNominal.setAttributeIndex("last");
+        	addNominal.setAttributeName("klasea");
+        	addNominal.setNominalLabels("NUM,LOC,HUM,DESC,ENTY,ABBR");
+        	addNominal.setInputFormat(data);
+        	data = Filter.useFilter(data, addNominal);
+        }
+        
+        File csv2 = new File(pathFileAux);
+        csv2.delete();
+		
+        data.setRelationName(relationName);
+        System.out.println(pathToData + " fitxategitik Instances objektua lortuta.");
+        return data;
+	}
+	
 	public static void disableWarning() {
 		System.err.close();
 		System.setErr(System.out);

@@ -15,8 +15,15 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.RenameAttribute;
 
+/**
+ * Datu gordinetik Wekak irakur dezakeen datu formatu batera bihurtzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class GetRaw {
 
+	
 	public static void main(String[] args) throws Exception {
 		
 		GetRaw.disableWarning();
@@ -42,6 +49,13 @@ public class GetRaw {
 		datuGordinetikArff(args[0], args[1]);
 	}
 	
+	/**
+	 * Datu gordinetik arff fitxategia sortu egiten du.
+	 * 
+	 * @param pathToData
+	 * @param pathArff
+	 * @throws Exception
+	 */
 	public static void datuGordinetikArff(String pathToData, String pathArff) throws Exception {
 		
 		Instances data = GetRaw.datuGordinetikInstances(pathToData);
@@ -63,6 +77,13 @@ public class GetRaw {
 			        
 	}
 	
+	/**
+	 * Datu gordinetik, Wekako {@link Instances} objektua sortu egiten du.
+	 * 
+	 * @param pathToData
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances datuGordinetikInstances(String pathToData) throws Exception {
 		
 		// Argumentuetaik datuak lortu
@@ -148,6 +169,9 @@ public class GetRaw {
         return data;
 	}
 	
+	/**
+	 * Warning-ak kentzeko.
+	 */
 	public static void disableWarning() {
 		System.err.close();
 		System.setErr(System.out);

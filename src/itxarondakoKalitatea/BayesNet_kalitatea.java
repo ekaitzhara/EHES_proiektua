@@ -13,6 +13,12 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
+/**
+ * {@link BayesNet} algortimoaren itxarondako kalitatea lortzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class BayesNet_kalitatea {
 	
 	public static void main(String[] args) throws Exception {
@@ -29,7 +35,14 @@ public class BayesNet_kalitatea {
 		reSubstitution(args[0], args[1]);
 	}
 	
-public static void holdOutAplikatu(String arffPath, String modelPath) throws Exception {
+	/**
+	 * Itxarondako kalitatea 100 hold-out ebaluazio aukeraren bidez lortzeko.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
+	public static void holdOutAplikatu(String arffPath, String modelPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
@@ -149,8 +162,14 @@ public static void holdOutAplikatu(String arffPath, String modelPath) throws Exc
 		
 	}
 
-	
-public static void fCVAplikatu(String arffPath, String modelPath) throws Exception {
+	/**
+	 * Itxarondako kalitatea 10-cross validation ebaluazio aukeraren bidez lortzeko.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
+	public static void fCVAplikatu(String arffPath, String modelPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
@@ -183,7 +202,14 @@ public static void fCVAplikatu(String arffPath, String modelPath) throws Excepti
 		
 	}
 	
-public static void reSubstitution(String arffPath, String modelPath) throws Exception {
+	/**
+	 * Itxarondako kalitatea 10 re-Substitution ebaluazio aukeraren bidez lortzeko.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
+	public static void reSubstitution(String arffPath, String modelPath) throws Exception {
 	
 	
 	DataSource source = new DataSource(arffPath);

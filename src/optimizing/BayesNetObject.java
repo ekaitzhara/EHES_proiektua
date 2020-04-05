@@ -1,8 +1,16 @@
 package optimizing;
 
+import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.net.estimate.SimpleEstimator;
 import weka.classifiers.bayes.net.search.local.K2;
 
+/**
+ * {@link BayesNet} algoritmorako parametro optimoak lortzeko {@link Class}.
+ * Parametro optimoak gordetzeko objektua da klase hau.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class BayesNetObject {
 	
 	// Parametroak

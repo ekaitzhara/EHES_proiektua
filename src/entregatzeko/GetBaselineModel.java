@@ -10,6 +10,12 @@ import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 
+/**
+ * Baseline-aren modeloa eta itxarondako kalitatea lortzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class GetBaselineModel {
 	
 	public static void main(String[] args) throws Exception {
@@ -38,6 +44,13 @@ public class GetBaselineModel {
 		baselineSortu(args[0], args[1]);
 	}
 	
+	/**
+	 * Arff fitxategia bat emanda, Baseline-a erabiliz (default: NaiveBayes) bere modeloa eta esleitutako kalitatea sortuko du.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
 	public static void baselineSortu(String arffPath, String modelPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
@@ -95,7 +108,12 @@ public class GetBaselineModel {
 		
 	}
 	
-	
+	/**
+	 * {@link Instances} objektu baten klase minoritarioa lortzen du, hau da, maiztasun gutxien duen klasea.
+	 * 
+	 * @param dataSet
+	 * @return
+	 */
 	public static int klaseMinoritarioaLortu(Instances dataSet) {
 		
 		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);

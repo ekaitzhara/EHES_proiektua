@@ -19,8 +19,23 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
+/**
+ * {@link BayesNet} algoritmorako parametro optimoak lortzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class BayesNetParamOpt {
 	
+	/**
+	 * Parametroak optimizatzeko metodoa.
+	 * 
+	 * @param arffPath
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @return
+	 * @throws Exception
+	 */
 	public static BayesNetObject optimizatuParametroak(String arffPath, String errepresentazioa, String bektoreMota) throws Exception {
 		
 		BayesNetObject paramsOpt = null;
@@ -79,7 +94,12 @@ public class BayesNetParamOpt {
 		return paramsOpt;
 	}
 
-	
+	/**
+	 * {@link Instances} objektu baten klase minoritarioa lortzen du, hau da, maiztasun gutxien duen klasea.
+	 * 
+	 * @param dataSet
+	 * @return
+	 */
 	public static int klaseMinoritarioaLortu(Instances dataSet) {
 		
 		int klaseMinoritarioa = Utils.minIndex(dataSet.attributeStats(dataSet.classIndex()).nominalCounts);
@@ -100,6 +120,16 @@ public class BayesNetParamOpt {
 	}
 
 
+	/**
+	 * Modelo optimoa gordetzeko metodoa.
+	 * 
+	 * @param arffPath
+	 * @param paramsOpt
+	 * @param modelPath
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @throws Exception
+	 */
 	public static void modeloaGorde(String arffPath, BayesNetObject paramsOpt, String modelPath, String errepresentazioa, String bektoreMota) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
@@ -155,7 +185,17 @@ public class BayesNetParamOpt {
 		
 	}
 	
-	
+	/**
+	 * Parametro optimoak lortzeko 10 hold-out ebaluazio aukera.
+	 * 
+	 * @param dataSet
+	 * @param arffPath
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @param classifier
+	 * @return
+	 * @throws Exception
+	 */
 	private static double holdOutAplikatu(Instances dataSet, String arffPath, String errepresentazioa, String bektoreMota, BayesNet classifier) throws Exception {
 		double emaitza = -1.0;
 		double totala = 0.0;
@@ -206,6 +246,17 @@ public class BayesNetParamOpt {
 		return emaitza;
 	}
 	
+	/**
+	 * Parametro optimoak lortzeko 10-cross validation ebaluazio aukera. 
+	 * 
+	 * @param dataSet
+	 * @param arffPath
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @param classifier
+	 * @return
+	 * @throws Exception
+	 */
 	private static double fCVAplikatu(Instances dataSet, String arffPath, String errepresentazioa, String bektoreMota, BayesNet classifier) throws Exception {
 		
 		

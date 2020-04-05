@@ -13,6 +13,12 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
+/**
+ * Baseline-aren itxarondako kalitatea lortzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class Baseline_kalitatea {
 	
 	public static void main(String[] args) throws Exception {
@@ -29,7 +35,13 @@ public class Baseline_kalitatea {
 		reSubstitution(args[0], args[1]);
 	}
 	
-	
+	/**
+	 * Itxarondako kalitatea 100 hold-out ebaluazio aukeraren bidez lortzeko.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
 	public static void holdOutAplikatu(String arffPath, String modelPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
@@ -150,7 +162,13 @@ public class Baseline_kalitatea {
 		
 	}
 
-	
+	/**
+	 * Itxarondako kalitatea 10-cross validation ebaluazio aukeraren bidez lortzeko.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
 	public static void fCVAplikatu(String arffPath, String modelPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);
@@ -184,6 +202,13 @@ public class Baseline_kalitatea {
 		
 	}
 	
+	/**
+	 * Itxarondako kalitatea re-Substitution ebaluazio aukeraren bidez lortzeko.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
 	public static void reSubstitution(String arffPath, String modelPath) throws Exception {
 
 		

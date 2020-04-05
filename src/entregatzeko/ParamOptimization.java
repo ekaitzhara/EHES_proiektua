@@ -4,7 +4,15 @@ import java.io.FileWriter;
 
 import optimizing.BayesNetObject;
 import optimizing.BayesNetParamOpt;
+import weka.classifiers.bayes.BayesNet;
 
+/**
+ * {@link BayesNet} algoritmorako parametro optimoak lortzeko klasea {@link Class}.
+ * Gainera, modelo optimoa gorde dezake, eta baita itxarondako kalitatea.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class ParamOptimization {
 	
 	
@@ -39,6 +47,14 @@ public class ParamOptimization {
 		parametroakOptimizatu(args[0], args[1]);
 	}
 
+	/**
+	 * Arff fitxategi bat, entrenamendu bezala erabilita, {@link BayesNet} algoritmorako parametro optimoak lortuko ditu.
+	 * Parametro horiek erabilita, adierazita modelo optimoa gordeko du, eta bere itxarondako kalitatea.
+	 * 
+	 * @param arffPath
+	 * @param modelPath
+	 * @throws Exception
+	 */
 	public static void parametroakOptimizatu(String arffPath, String modelPath) throws Exception {
 		
 		// Erabakitako aukerak

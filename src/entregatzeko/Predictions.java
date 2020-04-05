@@ -10,6 +10,12 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 
+/**
+ * Estimazioa egiteko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class Predictions {
 	
 	public static void main(String[] args) throws Exception {
@@ -41,6 +47,15 @@ public class Predictions {
 		
 	}
 	
+	/**
+	 * Datu gordineko fitxategi bat, arff fitxategi batera eraldatuko da, eta {@link BayesNet}-eko modelo optimorako bateragarria egingo du.
+	 * Hau, adierazitako hiztegiarekin egingo du. Gero, modelo honekin, fitxategi horren gainean estimazioak egingo dira eta gordeko dira.
+	 * 
+	 * @param csvPath
+	 * @param modelPath
+	 * @param dictionaryPath
+	 * @throws Exception
+	 */
 	public static void sailkatuDatuak(String csvPath, String modelPath, String dictionaryPath) throws Exception {
 		
 		Instances dataSet = GetRaw.datuGordinetikInstances(csvPath);
@@ -71,6 +86,16 @@ public class Predictions {
 		
 	}
 	
+	/**
+	 * Estimazioak egiteko arff fitxategi bat edukita, eta estimazio horien emaitza errealak dituen beste fitxategia edukita.
+	 * Modelo optimoa zenbat estimazio asmatzen dituen erakutsiko eta gordeko ditu.
+	 * 
+	 * @param arffPath
+	 * @param realAffPath
+	 * @param modelPath
+	 * @param dictionaryPath
+	 * @throws Exception
+	 */
 	public static void compareResults(String arffPath, String realAffPath, String modelPath, String dictionaryPath) throws Exception {
 		
 		DataSource source = new DataSource(arffPath);

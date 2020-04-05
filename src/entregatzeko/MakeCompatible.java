@@ -9,6 +9,12 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 
+/**
+ * Wekako datua bateragarri egiteko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class MakeCompatible {
 	
 	public static void main(String[] args) throws Exception {
@@ -40,6 +46,13 @@ public class MakeCompatible {
 		}
 	}
 	
+	/**
+	 * Arff fitxategi oneko hiztegia erabilita, aldatu beharreko arff fitxategia aldatu eta gordeko du.
+	 * 
+	 * @param goodArff
+	 * @param arffToChange
+	 * @throws Exception
+	 */
 	public static void makeCompatibleArffFile(String goodArff, String arffToChange) throws Exception {
 		
 		
@@ -78,6 +91,15 @@ public class MakeCompatible {
 		
 	}
 	
+	/**
+	 * {@link Instances} objektu bat, hiztegi bat edukita, beste {@link Instances} objektua sortuko du.
+	 * Objektu berri hori, hiztegiko atributuak izango ditu.
+	 * 
+	 * @param toChange
+	 * @param dictionaryPath
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances makeCompatibleInstances(Instances toChange, String dictionaryPath) throws Exception {
 		if (toChange.classIndex() == -1)
 			toChange.setClassIndex(toChange.numAttributes() - 1);

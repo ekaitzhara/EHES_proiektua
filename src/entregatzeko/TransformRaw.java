@@ -9,6 +9,12 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 import weka.filters.unsupervised.instance.SparseToNonSparse;
 
+/**
+ * Arff fitxategiei errepresentazioa jartzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class TransformRaw {
 	
 	public static void main(String[] args) throws Exception {
@@ -40,6 +46,15 @@ public class TransformRaw {
 
 	// Errepresentazioa --> BOW, TF ala TFIDF
 	// String bektoreMota --> NonSparse ala Sparse
+	/**
+	 * Arff fitxategi bat, adierazitako direktorioan eta aukeratutako errepresentazio eta bektore-motarekin eraldatuko da.
+	 * 
+	 * @param pathArff
+	 * @param direktorioa
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @throws Exception
+	 */
 	public static void transFormRawMetodoa(String pathArff, String direktorioa ,String errepresentazioa, String bektoreMota) throws Exception {
 		
 		System.out.println(pathArff + " fitxategia aukera hauekin eraldatuko da:");
@@ -73,6 +88,15 @@ public class TransformRaw {
 		
 	}
 	
+	/**
+	 * Wekako Instances objektu bat, adierazitako direktorioan eta aukeratutako errepresentazio eta bektore-motarekin eraldatuko da, Instances objektua bueltatuta..
+	 * 
+	 * @param dataSet
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances transformRawInstances(Instances dataSet, String errepresentazioa, String bektoreMota) throws Exception {
 		
 		// Hitz guztiak sar daitezen hiztegirako zabalera handia sartuko diogu 
@@ -109,6 +133,17 @@ public class TransformRaw {
 		return dataSet;
 	}
 	
+	/**
+	 * Instances objektu bat, aukeratutako errepresentazio eta bektore-motarekin eraldatuko da, baina adierazitako hiztegia erabilita.
+	 * 
+	 * @param dataSet
+	 * @param errepresentazioa
+	 * @param bektoreMota
+	 * @param direktorioa
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances transformRawInstancesDictionary(Instances dataSet, String errepresentazioa, String bektoreMota, String direktorioa, String fileName) throws Exception {
 		
 		// Hitz guztiak sar daitezen hiztegirako zabalera handia sartuko diogu 

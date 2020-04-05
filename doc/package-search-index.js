@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"entregatzeko"},{"l":"optimizing"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"entregatzeko"},{"l":"itxarondakoKalitatea"},{"l":"optimizing"}]

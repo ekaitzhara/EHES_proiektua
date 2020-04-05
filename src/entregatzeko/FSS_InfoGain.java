@@ -9,6 +9,12 @@ import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
+/**
+ * Atributu hautapena betetzeko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class FSS_InfoGain {
 	
 	public static void main(String[] args) throws Exception {
@@ -41,6 +47,15 @@ public class FSS_InfoGain {
 		atributuenHautapenaInfoGain(args[0], args[1], Integer.valueOf(args[2]));
 	}
 	
+	/**
+	 * Arff fitxategi bat, adierazitako direktorio eta izenarekin atributu hautapena egikarituko zaio.
+	 * Adierazitako portzentaiaren arabera, atributuen portzentai hori gelditu egingo da azkenengo fitxategian.
+	 * 
+	 * @param trainArff
+	 * @param arffToSave
+	 * @param portzentaia
+	 * @throws Exception
+	 */
 	public static void atributuenHautapenaInfoGain(String trainArff, String arffToSave, int portzentaia) throws Exception {
 		
 		System.out.println(trainArff + " fitxategiko atributuen %" + portzentaia + "-rekin utziko diogu");
@@ -66,6 +81,13 @@ public class FSS_InfoGain {
 				+ "\n	" + arffToSave);
 	}
 	
+	/**
+	 * {@link Instances} objektu baten atributu hautapena egikarituko zaio. Atributuen %10a geratuko dira.
+	 * 
+	 * @param dataSet
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances atributuenHautapenaInstances(Instances dataSet) throws Exception {
 		
 		if (dataSet.classIndex() == -1)
@@ -91,6 +113,15 @@ public class FSS_InfoGain {
 		return dataSet;
 	}
 	
+	/**
+	 * {@link Instances} objektu baten atributu hautapena egikarituko zaio.
+	 * Adierazitako portzentaiaren arabera, atributuen portzentai hori gelditu egingo da azkenengo {@link Instances} objektuan.
+	 * 
+	 * @param dataSet
+	 * @param portzentaia
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances atributuenHautapenaInstancesPortzentai(Instances dataSet, Integer portzentaia) throws Exception {
 		
 		if (dataSet.classIndex() == -1)

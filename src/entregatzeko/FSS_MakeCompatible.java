@@ -13,6 +13,12 @@ import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.Reorder;
 
+/**
+ * Atributu hautapena egin ostean datual bateragarri egiteko {@link Class}.
+ * 
+ * @author ekaitzhara
+ *
+ */
 public class FSS_MakeCompatible {
 	
 	public static void main(String[] args) throws Exception {
@@ -42,6 +48,14 @@ public class FSS_MakeCompatible {
 		make2ArffCompatible(args[0], args[1]);
 	}
 	
+	/**
+	 * Arff fitxategi bat, sartutako hiztegiaren arabera eraldatu egingo da.
+	 * Hiztegiak dituen hitz guztiak arff fitxategiren {@link Attribute}bihurtuko dira.
+	 * 
+	 * @param toChangeArff
+	 * @param dictionaryPath
+	 * @throws Exception
+	 */
 	public static void make2ArffCompatible(String toChangeArff, String dictionaryPath) throws Exception {
 		
 		System.out.println(toChangeArff + "fitxategia bateragarri egingo dugu.");
@@ -66,6 +80,14 @@ public class FSS_MakeCompatible {
 		
 	}
 	
+	/**
+	 * Bi {@link Instances} objektu bateragarri bihurtzen ditu, {@link Attribute} berdinak jarriz bietan.
+	 * 
+	 * @param good
+	 * @param toChange
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances make2InstancesCompatibles(Instances good, Instances toChange) throws Exception {
 		
 		if (good.classIndex() == -1)
@@ -100,6 +122,15 @@ public class FSS_MakeCompatible {
 		return changed;
 	}
 	
+	/**
+	 * {@link Instances} objektu bat, hiztegi bat edukita, beste {@link Instances} objektua sortuko du.
+	 * Objektu berri hori, hiztegiko atributuak izango ditu. Klasea lehen {@link Attribute} bezala utziko du.
+	 * 
+	 * @param toChange
+	 * @param dictionaryPath
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances makeFSSCompatibleInstances(Instances toChange, String dictionaryPath) throws Exception {
 		
 		if (toChange.classIndex() == -1)
@@ -125,6 +156,13 @@ public class FSS_MakeCompatible {
 		
 	}
 	
+	/**
+	 * {@link Instances} objektu baten {@link Attribute} guztien hiztegia gordetzen du adierazitako path-ean.
+	 * 
+	 * @param dataSet
+	 * @param dictionaryPath
+	 * @throws IOException
+	 */
 	public static void gordeHiztegia(Instances dataSet, String dictionaryPath) throws IOException {
 		
 		FileWriter f = new FileWriter(dictionaryPath);

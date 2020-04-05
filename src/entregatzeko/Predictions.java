@@ -24,13 +24,14 @@ public class Predictions {
 			System.out.println("Ondorengo balditza:");
 			System.out.println("	Atzetik parametro optimoenak lortu egin dira, eta horiekin modeloa sortu");
 			System.out.println("	Sartutako arff-a klaserik gabe dago, hau da, klase atributuan ez dauzka daturik => '?'");
-			System.out.println("	Modelo optimoa erabilita instantzi guztiak estimatu egingo dira");
+			System.out.println("	Modelo optimoa erabilita instantzia guztiak estimatu egingo dira");
 			System.out.println("	Estimazio guztiak fitxategi batean gordeko dira");
 			System.out.println("Argumentuen zerrenda eta deskribapena:");
 			System.out.println("	1 -> Estimaziorako arff-a");
 			System.out.println("	2 -> Modelo optimoaren path-a");
+			System.out.println("	3 -> Modelo optimoan sortu egin den hiztegiaren path-a");
 			System.out.println("Adibide hau jarraitu:\n");
-			System.out.println("		java -jar predictions.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/workdir/Model/adibide.model\n");
+			System.out.println("		java -jar predictions.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/workdir/Model/adibide.model /home/erabiltzaileIzena/workdir/ARFF/OPT_dictionary.txt\n");
 			
 			System.exit(0);
 		}

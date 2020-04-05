@@ -60,7 +60,7 @@ public class TransformRaw {
 		if (train.classIndex() == -1)
 			train.setClassIndex(train.numAttributes()-1);
 		
-		train = TransformRaw.transformRawInstances(train, errepresentazioa, bektoreMota);
+		train = TransformRaw.transformRawInstancesDictionary(train, errepresentazioa, bektoreMota, direktorioa, fileName);
 		
 		FileWriter f = new FileWriter(newArff);
 		f.write(train.toString());
@@ -90,6 +90,46 @@ public class TransformRaw {
 			stwv.setIDFTransform(false);
 			stwv.setTFTransform(false);
 		}
+		stwv.setInputFormat(dataSet);
+		
+		dataSet = Filter.useFilter(dataSet, stwv);
+		dataSet.setClassIndex(0);
+		
+		if ("Sparse".equals(bektoreMota)) { 
+			// NonSparsetik Sparsera 
+			SparseToNonSparse nsts = new SparseToNonSparse();
+			nsts.setInputFormat(dataSet);
+			dataSet = Filter.useFilter(dataSet, nsts);
+		}
+		
+		dataSet.setRelationName("train_" + errepresentazioa + "_" + bektoreMota);
+		
+		return dataSet;
+	}
+	
+	public static Instances transformRawInstancesDictionary(Instances dataSet, String errepresentazioa, String bektoreMota, String direktorioa, String fileName) throws Exception {
+		
+		// Hitz guztiak sar daitezen hiztegirako zabalera handia sartuko diogu 
+		Integer hiztegiZabalera = Integer.MAX_VALUE;
+		
+		StringToWordVector stwv = new StringToWordVector();
+		stwv.setWordsToKeep(hiztegiZabalera);
+		stwv.setPeriodicPruning(100.0);
+		stwv.setMinTermFreq(-1);
+		stwv.setAttributeIndices("first-last");
+		if ("TFIDF".equals(errepresentazioa)) {
+			stwv.setTFTransform(true);
+			stwv.setIDFTransform(true);
+		} else if("TF".equals(errepresentazioa)) {
+			stwv.setTFTransform(true);
+		} else {
+			stwv.setIDFTransform(false);
+			stwv.setTFTransform(false);
+		}
+		
+		// Gorde dictionary
+		stwv.setDictionaryFileToSaveTo(new File(direktorioa + "/" + fileName + "_" + errepresentazioa + "_" + bektoreMota + "_dictionary.txt"));
+		
 		stwv.setInputFormat(dataSet);
 		
 		dataSet = Filter.useFilter(dataSet, stwv);

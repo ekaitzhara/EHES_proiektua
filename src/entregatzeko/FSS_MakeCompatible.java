@@ -22,18 +22,19 @@ public class FSS_MakeCompatible {
 		if(args.length == 0) {
 			System.out.println("=== PROGRAMAREN FUNTZIONAMENDURAKO LAGUNTZA ===\n");
 			System.out.println("Aurrebaldintza:");
-			System.out.println("	Lehenik fssInfoGain aplikatu izana, horrela FSS arff zuzena sortuta edukiko duzulako");
-			System.out.println("	Gainera, transformRaw ere aplikatuta egon behar da, sortu den fitxategia bigarren argumentua izango da");
-			System.out.println("	Bigarren arff hori errepresentazioa edukiko beharko du (ad. BOW) eta hori makeCompatible edo transformRaw-rekin lor daiteke");
+			System.out.println("	Lehenik FSSInfoGain aplikatu izana, horrela FSS arff zuzena sortuta edukiko duzulako");
+			System.out.println("	Gainera, TransformRaw ere aplikatuta egon behar da, sortu den fitxategia bigarren argumentua izango da");
+			System.out.println("	Aurrekoa egikarituta, bere hiztegia sortu egin da");
+			System.out.println("	Beste aukera bat gordeHiztegia metodoarekin nahi duzun fitxategiaren hiztegia gorde");
 			System.out.println("Ondorengo balditza:");
-			System.out.println("	FSS direktorioan sortuko da FSS arff berria, bigarren argumentuko datuetatik abiatuta");
-			System.out.println("	FSS arff berri hori lehenengo argumentuko arff-aren atributu kopuru berdina izango ditu");
+			System.out.println("	Lehen argumentua dagoen direktorio berdinean sortuko da fitxategi bateratua");
+			System.out.println("	Fitxategi berri hori bigarren argumentuko hiztegiaren araberako atributu kopurua izango ditu");
 			System.out.println("	Horrela, bi datu-sortak konpatibleak egingo ditugu, atributu berdinak edukita");
 			System.out.println("Argumentuen zerrenda eta deskribapena:");
-			System.out.println("	1 -> fssInfoGain-en sortutako arff-aren path-a (atributuen hautapena egikarituta duena)");
+			System.out.println("	1 -> Bateragarri egin nahi duzun fitxategiaren path-a (GetRaw-ean sortu dena, filtro barik)");
 			System.out.println("	2 -> Aldatzeko beharko dugun hiztegiaren path-a");
 			System.out.println("Adibide hau jarraitu:\n");
-			System.out.println("		java -jar FSSMakeCompatible.jar /home/erabiltzaileIzena/workdir/Transform/adibideBOW.arff /home/erabiltzaileIzena/nonDago/dictionary.txt\n");
+			System.out.println("		java -jar FSSMakeCompatible.jar /home/erabiltzaileIzena/workdir/ARFF/adibide.arff /home/erabiltzaileIzena/nonDago/dictionary.txt\n");
 
 			System.exit(0);
 		}
@@ -56,12 +57,12 @@ public class FSS_MakeCompatible {
 		String[] aux = toChangeArff.split("/");
 		String fileName = aux[aux.length-1];
 		
-		FileWriter f = new FileWriter(toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
+		FileWriter f = new FileWriter(toChangeArff.replace(fileName, "") + fileName.split("\\.")[0] + "_compatible.arff");
 		f.write(changed.toString());
 		f.close();
 		
 		System.out.println("\nAtributuak bateragarri eginda ondo gorde da hemen: "
-				+ "\n" + toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
+				+ "\n" + toChangeArff.replace(fileName, "") + fileName.split("\\.")[0] + "_compatible.arff");
 		
 	}
 	

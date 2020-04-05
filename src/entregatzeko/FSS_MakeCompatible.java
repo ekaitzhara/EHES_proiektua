@@ -31,9 +31,9 @@ public class FSS_MakeCompatible {
 			System.out.println("	Horrela, bi datu-sortak konpatibleak egingo ditugu, atributu berdinak edukita");
 			System.out.println("Argumentuen zerrenda eta deskribapena:");
 			System.out.println("	1 -> fssInfoGain-en sortutako arff-aren path-a (atributuen hautapena egikarituta duena)");
-			System.out.println("	2 -> Aldatu nahi duzun arff fitxategiaren path-a");
+			System.out.println("	2 -> Aldatzeko beharko dugun hiztegiaren path-a");
 			System.out.println("Adibide hau jarraitu:\n");
-			System.out.println("		java -jar fssMakeCompatible.jar /home/erabiltzaileIzena/workdir/Transform/FSS/adibideFSS.arff /home/erabiltzaileIzena/workdir/Transform/adibideBOW.arff\n");
+			System.out.println("		java -jar FSSMakeCompatible.jar /home/erabiltzaileIzena/workdir/Transform/adibideBOW.arff /home/erabiltzaileIzena/nonDago/dictionary.txt\n");
 
 			System.exit(0);
 		}
@@ -41,63 +41,32 @@ public class FSS_MakeCompatible {
 		make2ArffCompatible(args[0], args[1]);
 	}
 	
-	public static void make2ArffCompatible(String trainArff, String toChangeArff) throws Exception {
+	public static void make2ArffCompatible(String toChangeArff, String dictionaryPath) throws Exception {
 		
-
-		DataSource source = new DataSource(trainArff);
-		Instances train = source.getDataSet();
-		if (train.classIndex() == -1)
-			train.setClassIndex(train.numAttributes() - 1);
-		
+		System.out.println(toChangeArff + "fitxategia bateragarri egingo dugu.");
+		System.out.println(dictionaryPath + " hiztegia erabiliko dugu hori lortzeko.");
 		
 		DataSource sourceChange = new DataSource(toChangeArff);
 		Instances toChange = sourceChange.getDataSet();
 		if (toChange.classIndex() == -1)
 			toChange.setClassIndex(0);
 		
-		int index = 0;
-		int[] indexToDelete = new int[toChange.numAttributes()-train.numAttributes()];
-		System.out.println(indexToDelete.length);
-		System.out.println(train.numAttributes());
-		System.out.println(toChange.numAttributes());
-		
-		for (int i = 0; i < toChange.numAttributes(); i++) {
-			boolean badago = false;
-			for (int j = 0; j < train.numAttributes(); j++) {
-				if (train.attribute(j).name().equals(toChange.attribute(i).name()))
-					badago = true;
-			}
-			if (badago == false) {
-				indexToDelete[index] = i;
-				index++;
-			}
-		}
-		
-		Remove remove = new Remove();
-		remove.setAttributeIndicesArray(indexToDelete);
-		remove.setInvertSelection(false);
-		remove.setInputFormat(toChange);
-		Instances changed = Filter.useFilter(toChange, remove);
-		
-		System.out.println("\n" + changed.numAttributes());
-		System.out.println(train.attribute(0).name() + " - " + changed.attribute(0).name());
-		System.out.println(train.classIndex() + " - " + changed.classIndex());
-		System.out.println(train.attribute(train.classIndex()).name() + " - " + changed.attribute(changed.classIndex()).name());
-		
+		Instances changed = FSS_MakeCompatible.makeFSSCompatibleInstances(toChange, dictionaryPath);
 		
 		String[] aux = toChangeArff.split("/");
 		String fileName = aux[aux.length-1];
-		changed.setRelationName(fileName.split("\\.")[0]);
-		
 		
 		FileWriter f = new FileWriter(toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
 		f.write(changed.toString());
 		f.close();
 		
-		System.out.println("\nAtributuak konpatible kenduta ondo gorde da hemen: " + toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
+		System.out.println("\nAtributuak bateragarri eginda ondo gorde da hemen: "
+				+ "\n" + toChangeArff.replace(fileName, "") + "FSS/" + fileName.split("\\.")[0] + "_FSS.arff");
+		
 	}
 	
 	public static Instances make2InstancesCompatibles(Instances good, Instances toChange) throws Exception {
+		
 		if (good.classIndex() == -1)
 			good.setClassIndex(good.numAttributes() - 1);
 		
@@ -135,6 +104,8 @@ public class FSS_MakeCompatible {
 		if (toChange.classIndex() == -1)
 			toChange.setClassIndex(toChange.numAttributes()-1);
 		
+		String relationName = toChange.relationName();
+		
 		// Lehenik sortu dugun hiztegiko atributuekin bategaragarri egin
 		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
 		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
@@ -148,7 +119,7 @@ public class FSS_MakeCompatible {
 		reorderFilter.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, reorderFilter);
 		
-		toChange.setRelationName("dev_FSS_compatible");
+		toChange.setRelationName(relationName + "_compatible");
 		return toChange;
 		
 	}
@@ -156,6 +127,7 @@ public class FSS_MakeCompatible {
 	public static void gordeHiztegia(Instances dataSet, String dictionaryPath) throws IOException {
 		
 		FileWriter f = new FileWriter(dictionaryPath);
+		// Atributu guztiak lortuko ditugu
 		Enumeration<Attribute> allAttributes = dataSet.enumerateAttributes();
 		
 		while (allAttributes.hasMoreElements())

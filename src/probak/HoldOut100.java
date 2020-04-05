@@ -1,5 +1,6 @@
 package probak;
 
+import java.io.FileWriter;
 import java.util.Random;
 
 import entregatzeko.FSS_InfoGain;
@@ -60,6 +61,15 @@ public class HoldOut100 {
 			FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 			
 			Instances dev_BOW_FSS = FSS_MakeCompatible.makeFSSCompatibleInstances(dev, dictionaryFSSPath);
+			
+			
+			FileWriter f1 = new FileWriter("/home/ekaitzhara/Documentos/UNI/EHES/Proiektua/Datuak/train.arff");
+			f1.write(train_BOW_FSS.toString());
+			f1.close();
+			
+			FileWriter f2 = new FileWriter("/home/ekaitzhara/Documentos/UNI/EHES/Proiektua/Datuak/dev.arff");
+			f2.write(dev_BOW_FSS.toString());
+			f2.close();
 			
 			int klaseMinoritarioa = NaiveBayesHoldOut.klaseMinoritarioaLortu(dataSet);	// HAU ERABILI BEHAR DA
 			

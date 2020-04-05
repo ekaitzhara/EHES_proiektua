@@ -137,12 +137,14 @@ public class FSS_MakeCompatible {
 		if (toChange.classIndex() == -1)
 			toChange.setClassIndex(toChange.numAttributes()-1);
 		
+		// Lehenik sortu dugun hiztegiko atributuekin bategaragarri egin
 		FixedDictionaryStringToWordVector fixedDictionary = new FixedDictionaryStringToWordVector();
 		fixedDictionary.setDictionaryFile(new File(dictionaryPath));
 		fixedDictionary.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, fixedDictionary);
-//		toChange.setClassIndex(0);
 		
+		// Lehenik StringToWordVector aplikatu dugunez train-ari, klasea 0. posizioan geratu egin da
+		// Beraz, arff honen klasea posizio berean jarri behar dugu, atributuak guztiz berdinak izateko
 		Reorder reorderFilter = new Reorder();
 		reorderFilter.setAttributeIndices("2-last,first");
 		reorderFilter.setInputFormat(toChange);

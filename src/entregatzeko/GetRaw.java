@@ -65,7 +65,7 @@ public class GetRaw {
 	
 	public static Instances datuGordinetikInstances(String pathToData) throws Exception {
 		
-		
+		// Argumentuetaik datuak lortu
 		String dataName = pathToData.split("\\.")[0];
 		String fileType = pathToData.split("\\.")[1];
 		String pathFileAux = dataName + "2." + fileType;
@@ -81,7 +81,7 @@ public class GetRaw {
             fw.write(line + "\n");
         }
         fw.close();
-
+        
         Instances data = null;
         // Gure datuak csv moduan daude
         if ("csv".equals(fileType)) {
@@ -91,8 +91,10 @@ public class GetRaw {
 		    data = loader.getDataSet();
         }
         
+        // Erlazio izena oso luze ez geratzeko, gerorako gordeko dugu
         String relationName = data.relationName().substring(0, data.relationName().length()-1);
         
+        // Leheneko zutabea identifikatzailea da, ez digu balio
         Remove r = new Remove();
 	    int[] indice = {0};
 	    r.setAttributeIndicesArray(indice);
@@ -100,20 +102,23 @@ public class GetRaw {
 	    r.setInputFormat(data);
 	    data = Filter.useFilter(data, r);
 	    
+	    // Lehen atributua mezua eramaten duena da, beraz, string motakoa izan behar da
 	    NominalToString filterString = new NominalToString();
 		filterString.setAttributeIndexes("first");
 		filterString.setInputFormat(data);
 		data = Filter.useFilter(data, filterString);
-		
         if(data.classIndex() == -1)
         	data.setClassIndex(data.numAttributes() - 1);
         
+        // Arazoak ez edukitzeko klaseko izenarekin aldatu egingo dugu
         RenameAttribute rename = new RenameAttribute();
         rename.setAttributeIndices("last");
         rename.setReplace("klasea");
         rename.setInputFormat(data);
         data = Filter.useFilter(data, rename);
         
+        // Klasearen datua ez badauka, numeric atributu bezala sortuko du
+        // Beraz, guk nominal bezala sortu beharko dugu
         if (data.numClasses() == 1) {
         	NumericToNominal numToNom = new NumericToNominal();
         	numToNom.setAttributeIndices("last");
@@ -133,6 +138,7 @@ public class GetRaw {
         	data = Filter.useFilter(data, addNominal);
         }
         
+        // Behar izan dugun fitxategi osagarria ezabatu
         File csv2 = new File(pathFileAux);
         csv2.delete();
 		

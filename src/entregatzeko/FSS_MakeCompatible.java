@@ -13,6 +13,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.Reorder;
 
 public class FSS_MakeCompatible {
 	
@@ -141,6 +142,11 @@ public class FSS_MakeCompatible {
 		fixedDictionary.setInputFormat(toChange);
 		toChange = Filter.useFilter(toChange, fixedDictionary);
 //		toChange.setClassIndex(0);
+		
+		Reorder reorderFilter = new Reorder();
+		reorderFilter.setAttributeIndices("2-last,first");
+		reorderFilter.setInputFormat(toChange);
+		toChange = Filter.useFilter(toChange, reorderFilter);
 		
 		toChange.setRelationName("dev_FSS_compatible");
 		return toChange;

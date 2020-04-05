@@ -45,7 +45,7 @@ public class ezZintzoa_proba {
 //		int klaseMax = Utils.maxIndex(train_BOW.attributeStats(train_BOW.classIndex()).nominalCounts);
 		
 		SimpleEstimator estimator = new SimpleEstimator();
-		estimator.setAlpha(0.0001);
+		estimator.setAlpha(0.1);
 		classifier.setEstimator(estimator);
 		
 		K2 searchAlgorithm = new K2();

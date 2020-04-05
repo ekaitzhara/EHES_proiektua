@@ -46,7 +46,7 @@ public class fCV_proba {
 		FSS_MakeCompatible.gordeHiztegia(train_BOW_FSS, dictionaryFSSPath);
 		
 //		SimpleEstimator estimator = new SimpleEstimator();
-//		estimator.setAlpha(0.1);
+//		estimator.setAlpha(0);
 //		classifier.setEstimator(estimator);
 //		
 //		K2 searchAlgorithm = new K2();

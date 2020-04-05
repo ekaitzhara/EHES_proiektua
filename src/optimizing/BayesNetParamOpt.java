@@ -51,8 +51,8 @@ public class BayesNetParamOpt {
 		double alphaOpt = -1.0;
 		int maxNrOfParentsOpt = -1;
 		
-		for (int i = 5; i < 11; i++) {	// MaxParents
-			for (double j = 0.1; j > 0.00001; j=j/10) {	// Alpha
+		for (int i = 1; i < 6; i++) {	// MaxParents
+			for (double j = 0.1; j > 0.0001; j=j/10) {	// Alpha
 					
 				try {
 					estimator.setAlpha(j);

@@ -19,6 +19,7 @@ import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Reorder;
 import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
@@ -31,7 +32,7 @@ public class HoldOut100 {
 		if (dataSet.classIndex() == -1)
 			dataSet.setClassIndex(dataSet.numAttributes() - 1);
 		
-			
+		
 		String errepresentazioa = "BOW";
 		String bektoreMota = "NonSparse";
 		
@@ -75,13 +76,13 @@ public class HoldOut100 {
 			
 			BayesNet classifier = new BayesNet();
 			
-			SimpleEstimator estimator = new SimpleEstimator();
-			estimator.setAlpha(0.0001);
-			classifier.setEstimator(estimator);
+//			SimpleEstimator estimator = new SimpleEstimator();
+//			estimator.setAlpha(0.1);
+//			classifier.setEstimator(estimator);
 			
-			K2 searchAlgorithm = new K2();
-			searchAlgorithm.setMaxNrOfParents(6);
-			classifier.setSearchAlgorithm(searchAlgorithm);
+//			K2 searchAlgorithm = new K2();
+//			searchAlgorithm.setMaxNrOfParents(5);
+//			classifier.setSearchAlgorithm(searchAlgorithm);
 			
 			Evaluation evaluator = new Evaluation(train_BOW_FSS);
 			classifier.buildClassifier(train_BOW_FSS);

@@ -186,6 +186,7 @@ public class Baseline_kalitatea {
 	}
 	
 	public static void reSubstitution(String arffPath, String modelPath) throws Exception {
+
 		
 		DataSource source = new DataSource(arffPath);
 		Instances dataSet = source.getDataSet();
@@ -216,4 +217,5 @@ public class Baseline_kalitatea {
 		System.out.println(evaluator.toMatrixString());
 		
 	}
+
 }

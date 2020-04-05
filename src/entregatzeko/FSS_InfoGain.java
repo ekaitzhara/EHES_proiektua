@@ -92,8 +92,8 @@ public class FSS_InfoGain {
 		InfoGainAttributeEval attEvaluator = new InfoGainAttributeEval();
 		Ranker ranker = new Ranker();
 
-		ranker.setNumToSelect((dataSet.numAttributes() * 5 / 100));
-		ranker.setThreshold(0.0);
+		ranker.setNumToSelect((dataSet.numAttributes() * 10 / 100));
+		ranker.setThreshold(2.0);
 		
 		attSelection.setEvaluator(attEvaluator);
 		attSelection.setSearch(ranker);
